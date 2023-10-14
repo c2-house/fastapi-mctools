@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fastapi-mcutools"
+version = "0.1.0"
+description = "Fastapi mc style tools"
+authors = ["Jungminchae <minchae3618@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fastapi_myutil"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.100.0"
+click = "^8.1.5"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.22"}
+pytz = "^2023.3.post1"
+boto3 = "^1.28.63"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
