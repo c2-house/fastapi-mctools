@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fastapi-mcutools"
+name = "fastapi-mctools"
 version = "0.1.0"
 description = "Fastapi mc style tools"
 authors = ["Jungminchae <minchae3618@gmail.com>"]
