@@ -175,3 +175,5 @@ mysql-init/
 
 .vscode/
 temp.json
+
+example.db
