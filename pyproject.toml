@@ -15,6 +15,12 @@ pytz = "^2023.3.post1"
 boto3 = "^1.28.63"
 
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+pytest-asyncio = "^0.21.1"
+pymysql = "^1.1.0"
+aiosqlite = "^0.19.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
