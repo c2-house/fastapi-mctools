@@ -7,7 +7,7 @@ from fastapi import FastAPI, Request, status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import StreamingResponse
 from starlette.concurrency import iterate_in_threadpool
-from fastapi_mctools.exceptions import HTTPException
+from fastapi_mctools.exceptions import exception_handler
 
 
 class RequestLoggingMixin:
@@ -111,19 +111,6 @@ class RequestLoggingMixin:
         if request.url.hostname in allowed_hosts:
             return True
         return False
-
-
-async def exception_handler(error: Exception) -> HTTPException:
-    """
-    Exception을 HTTPException으로 변환하여 HTTP 상태 코드와 에러 메시지를 반환합니다.
-    """
-    if not isinstance(error, HTTPException):
-        error = HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(error),
-            code="INTERNAL_SERVER_ERROR",
-        )
-    return error
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
