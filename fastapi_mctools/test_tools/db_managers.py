@@ -57,7 +57,7 @@ class TestConfDBManager:
         async with engine.begin() as connection:
             transaction = await connection.begin()
             async_session = async_sessionmaker(
-                connection, autoflush=False, autocommit=False
+                connection, autoflush=False, autocommit=False, expire_on_commit=False
             )
             async with async_session() as session:
                 await session.begin()
