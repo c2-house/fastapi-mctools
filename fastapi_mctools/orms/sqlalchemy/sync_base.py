@@ -105,3 +105,25 @@ class ReadBase(ORMBase):
             )
 
         return db.query(*columns).filter(*filters).all()
+
+
+class UpdateBase(ORMBase):
+    def update_by_obj(self, db, db_obj, **kwargs):
+        """
+        ALTER TABLE {table_name(self.model)} SET {key1} = {value1}, {key2} = {value2}, ... WHERE id = {db_obj.id}
+        """
+        for key, value in kwargs.items():
+            setattr(db_obj, key, value)
+        db.commit()
+        db.refresh(db_obj)
+        return db_obj
+
+
+class DeleteBase(ORMBase):
+    def delete(self, db, db_obj):
+        """
+        DELETE FROM {table_name(self.model)} WHERE id = {db_obj.id}
+        """
+        db.delete(db_obj)
+        db.commit()
+        return db_obj
