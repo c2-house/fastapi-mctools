@@ -40,6 +40,22 @@ class ReadBase(ORMBase):
             return db.query(*columns).filter(self.model.id == id).first()
         return db.query(self.model).filter(self.model.id == id).first()
 
+    def get_by_filters(self, db: Session, columns: list[str] = None, **kwargs):
+        """
+        SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
+        """
+        if columns:
+            columns = [getattr(self.model, column) for column in columns]
+        else:
+            columns = [self.model]
+
+        filters = [
+            (getattr(self.model, k) == v)
+            for k, v in kwargs.items()
+            if hasattr(self.model, k)
+        ]
+        return db.query(*columns).filter(*filters).first()
+
     def get_all(
         self,
         db: Session,
