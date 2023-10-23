@@ -11,3 +11,11 @@ class ORMBase(Generic[T]):
 
     def __init__(self, model: T):
         self.model = model
+
+    def get_columns(self, columns: list[str] | None = None) -> list:
+        """
+        columns에 해당하는 컬럼들을 가져옵니다.
+        """
+        if columns:
+            return [getattr(self.model, column) for column in columns]
+        return [self.model]
