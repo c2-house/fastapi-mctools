@@ -1,0 +1,21 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session
+from app.core.config import settings
+
+
+class DB:
+    def __init__(self, db_url: str) -> None:
+        self.engine = create_engine(db_url, pool_pre_ping=True)
+        self.session = sessionmaker(bind=self.engine) # autocommit=False, autoflush=False
+        self.db = self.session()
+
+    def __enter__(self) -> Session:
+        return self.db
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.db.close()
+
+
+async def get_db():
+    with DB(settings.DB_URL) as db:
+        yield db
