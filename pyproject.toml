@@ -10,13 +10,11 @@ packages = [{include = "fastapi_mctools"}]
 python = "^3.11"
 fastapi = "^0.100.0"
 click = "^8.1.5"
-sqlalchemy = "^2.0.22"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.22"}
 pytz = "^2023.3.post1"
 boto3 = "^1.28.63"
 httpx = "^0.25.0"
 
-[tool.poetry.extras]
-asyncio = ["sqlalchemy[asyncio]"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.2"
