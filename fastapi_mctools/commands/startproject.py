@@ -16,8 +16,9 @@ def main():
 
     check_path(
         [
+            "./app/",
             "./app/config/",
-            "./app/routers/",
+            "./app/routes/",
             "./app/db/",
             "./app/models/",
             "./app/schemas/",
