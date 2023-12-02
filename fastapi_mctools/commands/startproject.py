@@ -1,9 +1,8 @@
 import os
 import shutil
-import subprocess
 import click
-
-TEMPLATE_PATH = "fastapi_mctools/commands/_templates/"
+import subprocess
+from importlib import resources
 
 
 @click.command("startproject", help="프로젝트 생성")
@@ -25,12 +24,28 @@ def main():
             "./app/orms/",
         ]
     )
+    TEMPLATE_PATH = "fastapi_mctools.commands._templates"
+    TEMPLATES = [
+        "settings.py-tpl",
+        "main.py-tpl",
+        "routers.py-tpl",
+        "async_session.py-tpl",
+        "session.py-tpl",
+        "sqlalchemy_base.py-tpl",
+        "gitignore-tpl",
+        "pre-commit-tpl",
+    ]
+    FILES = [
+        "settings.py",
+        "main.py",
+        "routers.py",
+        "async_session.py",
+        "session.py",
+        "base.py",
+        ".gitignore",
+        ".pre-commit-config.yaml",
+    ]
 
-    shutil.copy(TEMPLATE_PATH + "settings.py-tpl", "./app/config/settings.py")
-    shutil.copy(TEMPLATE_PATH + "main.py-tpl", "./app/main.py")
-    shutil.copy(TEMPLATE_PATH + "routers.py-tpl", "./app/routers/routers.py")
-    shutil.copy(TEMPLATE_PATH + "async_session.py-tpl", "./app/db/async_session.py")
-    shutil.copy(TEMPLATE_PATH + "session.py-tpl", "./app/db/session.py")
-    shutil.copy(TEMPLATE_PATH + "sqlalchemy_base.py-tpl", "./app/models/base.py")
-    shutil.copy(TEMPLATE_PATH + "gitignore-tpl", "./.gitignore")
-    shutil.copy(TEMPLATE_PATH + "pre-commit-tpl", "./.pre-commit-config.yaml")
+    for template, file in zip(TEMPLATES, FILES):
+        with resources.path(TEMPLATE_PATH, template) as template_path:
+            shutil.copy(str(template_path), "./app/" + file)
