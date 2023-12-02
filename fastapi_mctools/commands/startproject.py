@@ -36,12 +36,12 @@ def main():
         "pre-commit-tpl",
     ]
     FILES = [
-        "settings.py",
+        "config/settings.py",
         "main.py",
-        "routers.py",
-        "async_session.py",
-        "session.py",
-        "base.py",
+        "routes/routers.py",
+        "db/async_session.py",
+        "db/session.py",
+        "models/base.py",
         ".gitignore",
         ".pre-commit-config.yaml",
     ]
