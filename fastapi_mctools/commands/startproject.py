@@ -1,10 +1,12 @@
 import os
 import shutil
 import subprocess
+import click
 
 TEMPLATE_PATH = "fastapi_mctools/commands/_templates/"
 
 
+@click.command("startproject", help="프로젝트 생성")
 def main():
     def check_path(paths: list[str]):
         for path in paths:
@@ -32,7 +34,3 @@ def main():
     shutil.copy(TEMPLATE_PATH + "sqlalchemy_base.py-tpl", "./app/models/base.py")
     shutil.copy(TEMPLATE_PATH + "gitignore-tpl", "./.gitignore")
     shutil.copy(TEMPLATE_PATH + "pre-commit-tpl", "./.pre-commit-config.yaml")
-
-
-if __name__ == "__main__":
-    main()
