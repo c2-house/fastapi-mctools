@@ -1,5 +1,6 @@
 import click
 from fastapi_mctools.commands.startproject import main as startproject_main
+from fastapi_mctools.commands.gunicorn import main as gunicorn_main
 
 
 @click.group()
@@ -10,6 +11,7 @@ def cli():
 
 def run_main():
     cli.add_command(startproject_main)
+    cli.add_command(gunicorn_main)
     cli(prog_name="fastapi-mctools")
 
 
