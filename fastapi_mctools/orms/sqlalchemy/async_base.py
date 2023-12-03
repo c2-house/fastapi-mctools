@@ -1,4 +1,4 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_mctools.orms import ORMBase, T
 
@@ -22,7 +22,8 @@ class ACreateBase(ORMBase):
         """
         INSERT INTO {table_name(self.model)} ({key1}, {key2}, ...) VALUES ({value1}, {value2}, ...), ({value1}, {value2}, ...)
         """
-        db.add_all([self.model(**data) for data in data_list])
+        query = insert(self.model).values(data_list)
+        await db.execute(query)
         await db.commit()
 
 
@@ -39,8 +40,9 @@ class AReadBase(ORMBase):
         """
         columns = self.get_columns(columns)
         query = select(*columns).filter(self.model.id == id)
-        results = await db.execute(query)
-        return results.scalars().first()
+        result = await db.execute(query)
+
+        return self.get_result(result, columns)
 
     async def get_by_filters(
         self, db: AsyncSession, columns: list[str] | None = None, **kwargs
@@ -57,7 +59,7 @@ class AReadBase(ORMBase):
         ]
         query = select(*columns).filter(*filters)
         results = await db.execute(query)
-        return results.scalars().first()
+        return self.get_result(results, columns)
 
     async def get_all(
         self,
@@ -78,7 +80,7 @@ class AReadBase(ORMBase):
         if page and page_size:
             query = query.limit(page_size).offset(page_size * (page - 1))
         results = await db.execute(query)
-        return results.scalars().all()
+        return self.get_results(results, columns)
 
     async def get_all_by_filters(
         self,
@@ -102,7 +104,7 @@ class AReadBase(ORMBase):
         if page and page_size:
             query = query.limit(page_size).offset(page_size * (page - 1))
         results = await db.execute(query)
-        return results.scalars().all()
+        return self.get_results(results, columns)
 
     async def get_by_in(
         self,
@@ -125,7 +127,7 @@ class AReadBase(ORMBase):
         else:
             query = query.filter(getattr(self.model, column).in_(values))
         result = await db.execute(query)
-        return result.all()
+        return self.get_results(result, columns)
 
     async def get_by_like(
         self,
@@ -148,7 +150,7 @@ class AReadBase(ORMBase):
         else:
             query = query.filter(getattr(self.model, column).like(value))
         result = await db.execute(query)
-        return result.all()
+        return self.get_results(result, columns)
 
 
 class AUpdateBase(ORMBase):
