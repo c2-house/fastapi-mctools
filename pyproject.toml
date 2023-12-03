@@ -8,8 +8,10 @@ packages = [{include = "fastapi_mctools"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.100.0"
 click = "^8.1.5"
+
+[tool.poetry.optional-dependencies]
+fastapi = "^0.100.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.22"}
 pytz = "^2023.3.post1"
 boto3 = "^1.28.63"
@@ -22,6 +24,10 @@ pytest-asyncio = "^0.21.1"
 pymysql = "^1.1.0"
 aiosqlite = "^0.19.0"
 pytest-mock = "^3.12.0"
+
+[tool.poetry.scripts]
+mct = "fastapi_mctools.commands.main:run_main"
+
 
 [build-system]
 requires = ["poetry-core"]
