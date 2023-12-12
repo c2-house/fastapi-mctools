@@ -2,8 +2,9 @@ import json
 import time
 from logging import Logger
 from datetime import datetime
-from pytz import timezone
+from zoneinfo import ZoneInfo
 from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import StreamingResponse
 from starlette.concurrency import iterate_in_threadpool
@@ -42,7 +43,7 @@ class RequestLoggingMixin:
                 round((time.time() - request.state.start_time) * 1000, 5)
             )
             + "ms",
-            "Request-Time": datetime.now(timezone(tz_location)).strftime(
+            "Request-Time": datetime.now(ZoneInfo(tz_location)).strftime(
                 "%Y-%m-%d %H:%M:%S"
             ),
         }
@@ -170,7 +171,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
             )
             log_str = ", ".join(f"{key}: {value}" for key, value in log_dict.items())
             self.logger.error(log_str)
-            return await call_next(request)
+            return JSONResponse(content={"detail": e.detail}, status_code=e.status_code)
         else:
             log_str = ", ".join(f"{key}: {value}" for key, value in log_dict.items())
             self.logger.info(log_str)
