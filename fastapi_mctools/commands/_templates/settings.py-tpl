@@ -1,6 +1,6 @@
 from pathlib import Path
 from decouple import AutoConfig
-from pytz import timezone, tzinfo
+from zoneinfo import ZoneInfo, tz
 from pydantic_settings import BaseSettings
 
 
@@ -74,5 +74,5 @@ class AppSettings(BaseSettings):
     }
 
     @property
-    def TIMEZONE(self) -> tzinfo:
-        return timezone(self.TIMEZONE_LOCATION)
+    def TIMEZONE(self) -> ZoneInfo:
+        return ZoneInfo(self.TIMEZONE_LOCATION)

@@ -13,7 +13,6 @@ click = "^8.1.5"
 [tool.poetry.optional-dependencies]
 fastapi = "^0.100.0"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.22"}
-pytz = "^2023.3.post1"
 boto3 = "^1.28.63"
 httpx = "^0.25.0"
 
