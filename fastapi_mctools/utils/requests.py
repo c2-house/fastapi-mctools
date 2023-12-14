@@ -18,6 +18,28 @@ def ensure_session(
 
 
 class APIClient:
+    """
+    APICLient는 httpx.AsyncClient를 래핑한 클래스입니다.
+    session을 하나만 생성하여 사용하며, start() 메소드를 통해 세션을 생성합니다.
+    close() 메소드를 통해 세션을 종료합니다.
+    
+    - 사용 예시:
+        api_client = APIClient()
+        await api_client.start()
+        async def get_example_1(api_client: APIClient):
+            response = await api_client.get("https://example.com")
+            return response
+
+        async def get_example_2(api_client: APIClient):
+            response = await api_client.get("https://example.com")
+            return response
+
+        response_1, response_2 = await asyncio.gather(
+            get_example_1(api_client),
+            get_example_2(api_client)
+        )
+        await api_client.close()    
+    """
     def __init__(self) -> None:
         self.session = None
 
