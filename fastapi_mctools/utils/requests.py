@@ -49,7 +49,7 @@ class APIClient:
 
     async def close(self) -> None:
         if self.session:
-            await self.session.close()
+            await self.session.aclose()
             self.session = None
 
     @ensure_session
