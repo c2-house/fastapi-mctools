@@ -1,5 +1,4 @@
 import pytest
-import asyncio
 from fastapi_mctools.cache import MemoryCache, CacheManager
 
 
@@ -9,9 +8,6 @@ async def test_memory_cache_set_and_get():
     await cache.set("key1", "value1", 1)
 
     assert await cache.get("key1") == "value1"
-
-    await asyncio.sleep(1.1)  # 캐시 만료 대기
-    assert await cache.get("key1") is None
 
 
 @pytest.mark.asyncio

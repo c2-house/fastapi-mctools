@@ -37,7 +37,8 @@ class MemoryCache(CacheStrategy):
             item = self.cache.get(key, (None, None))
             value, expire_at = item
 
-            if expire_at is not None and expire_at < asyncio.get_event_loop().time():
+            current_time = await self._get_current_time()
+            if expire_at is not None and expire_at < current_time:
                 await self.delete(key)
                 return None
 
@@ -52,10 +53,11 @@ class MemoryCache(CacheStrategy):
             value (Any): 메모리에 저장할 값.
             timeout (Optional[int]): 캐시의 만료 시간(초). 기본값은 None입니다.
         """
+        current_time = await self._get_current_time()
         async with self.lock:
             if len(self.cache) >= self.maxsize:
                 self.cache.popitem(last=False)
-            expire_at = asyncio.get_event_loop().time() + timeout if timeout else None
+            expire_at = current_time + timeout if timeout else None
             self.cache[key] = (value, expire_at)
 
     async def delete(self, key: str) -> None:
@@ -68,3 +70,6 @@ class MemoryCache(CacheStrategy):
         async with self.lock:
             if key in self.cache:
                 del self.cache[key]
+
+    async def _get_current_time(self) -> float:
+        return asyncio.get_event_loop().time()
