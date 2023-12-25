@@ -22,10 +22,10 @@ class DB:
             db.close()
 
 
-class Async_DB:
+class AsyncDB:
     """
     db connection by sqlalchemy
-    get_db = Async_DB(db_url)
+    get_db = AsyncDB(db_url)
     """
 
     def __init__(self, db_url: str) -> None:
