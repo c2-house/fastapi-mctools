@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from fastapi_mctools.dependencies import Dependency
+from fastapi_mctools.dependencies import Dependency, create_simple_form_dependency
 from pydantic import BaseModel
 import pytest
 
@@ -62,3 +62,13 @@ def test_run_something_about_user(client):
     assert "some" in data
     assert data["user"] is True
     assert data["some"] is True
+
+
+def test_create_simple_form_dependency():
+    input = {
+        "username": str,
+        "password": str,
+        "age": int,
+    }
+    FastAPIForm = create_simple_form_dependency(input)
+    assert "FastAPIForm" in locals()
