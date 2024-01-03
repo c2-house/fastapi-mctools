@@ -17,7 +17,7 @@ class TypeHintChecker(ast.NodeVisitor):
             if arg.annotation is None and arg.arg not in SELF:
                 self.missing_type_hints.append((node.name, arg.arg))
 
-        if node.returns is None and node.name != "__init__":
+        if node.returns is None:
             self.missing_type_hints.append((node.name, "return"))
 
         self.generic_visit(node)
