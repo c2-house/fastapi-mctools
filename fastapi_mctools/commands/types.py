@@ -48,14 +48,20 @@ def check_directory_for_type_hints(directory: str) -> HintDict:
 def main(path):
     if os.path.isdir(path):
         missing_hints = check_directory_for_type_hints(path)
+        if missing_hints:
+            click.echo("Type Hint 빼먹음 :")
+            for file, hints in missing_hints.items():
+                click.echo(f"In {file}:")
+                for func, arg in hints:
+                    click.echo(f"  Function '{func}' 타입힌트가 없습니다. -> '{arg}'")
+        else:
+            click.echo("타입힌트를 빼먹지 않았습니다.")
     else:
         missing_hints = check_file_for_type_hints(path)
-
-    if missing_hints:
-        click.echo("Type Hint 빼먹음 :")
-        for file, hints in missing_hints.items():
-            click.echo(f"In {file}:")
-            for func, arg in hints:
+        if missing_hints:
+            click.echo("Type Hint 빼먹음 :")
+            click.echo(f"In {path}:")
+            for func, arg in missing_hints:
                 click.echo(f"  Function '{func}' 타입힌트가 없습니다. -> '{arg}'")
-    else:
-        click.echo("타입힌트를 빼먹지 않았습니다.")
+        else:
+            click.echo("타입힌트를 빼먹지 않았습니다.")
