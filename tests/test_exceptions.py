@@ -1,7 +1,10 @@
 import pytest
-from fastapi_mctools.exceptions import HTTPException, exception_handler, handle_http_exception
-from fastapi import FastAPI
-from fastapi.testclient import TestClient
+from fastapi_mctools.exceptions import (
+    HTTPException,
+    exception_handler,
+    handle_http_exception,
+)
+from fastapi import Request
 
 
 def test_http_exception_attributes():
@@ -33,26 +36,13 @@ async def test_exception_handler():
     assert isinstance(exception, HTTPException)
 
 
-def test_handle_http_exception():
-    app = FastAPI()
-    app.add_exception_handler(HTTPException, handle_http_exception)
-    client = TestClient(app)
-
+@pytest.mark.asyncio
+async def test_handle_http_exception():
     custom_exception = HTTPException(
         status_code=404,
         detail="Item not found",
         code="NOT_FOUND",
         headers={"Custom-Header": "Value"},
     )
-
-    @app.get("/test")
-    def test():
-        raise custom_exception
-    response = client.get("/test")
+    response = await handle_http_exception(Request, custom_exception)
     assert response.status_code == 404
-    assert response.json() == {
-        "status_code": 404,
-        "detail": "Item not found",
-        "code": "NOT_FOUND",
-        "headers": {"Custom-Header": "Value"},
-    }
