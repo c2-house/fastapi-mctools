@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "fastapi-mctools"
-version = "0.1.0"
-description = "Fastapi mc style tools"
+version = "0.2.0"
+description = "Fastapi mc style tools to make it easier to develop."
 authors = ["Jungminchae <minchae3618@gmail.com>"]
 readme = "README.md"
 packages = [{include = "fastapi_mctools"}]
