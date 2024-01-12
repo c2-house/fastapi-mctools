@@ -1,6 +1,5 @@
 import asyncio
-from collections import OrderedDict
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Dict
 from fastapi_mctools.cache.base import CacheStrategy
 
 
@@ -18,7 +17,7 @@ class MemoryCache(CacheStrategy):
     """
 
     def __init__(self, maxsize: int = 100) -> None:
-        self.cache: OrderedDict[str, Tuple[Any, Optional[float]]] = OrderedDict()
+        self.cache: Dict[str, Tuple[Any, Optional[float]]] = dict()
         self.maxsize = maxsize
         self.lock = asyncio.Lock()
 
