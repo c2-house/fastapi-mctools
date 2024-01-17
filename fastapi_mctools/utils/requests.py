@@ -1,10 +1,19 @@
 import httpx
 import warnings
-from typing import Callable, Any, Coroutine, TypeVar, Union, ParamSpecArgs, ParamSpecKwargs
+from typing import (
+    Callable,
+    Any,
+    Coroutine,
+    TypeVar,
+    Union,
+    ParamSpecArgs,
+    ParamSpecKwargs,
+)
 from functools import wraps
 
 T = TypeVar("T", bound="APIClient")
 P = Union[ParamSpecArgs, ParamSpecKwargs]
+
 
 def ensure_session(
     func: Callable[..., Coroutine[Any, Any, httpx.Response]]
@@ -14,16 +23,17 @@ def ensure_session(
         if self.session is None:
             raise RuntimeError("세션이 시작되지 않았습니다. start() 메소드를 호출하세요.")
         return await func(self, *args, **kwargs)
+
     return wrapper
 
 
 class APIClient:
     """
-    APICLient는 httpx.AsyncClient를 래핑한 클래스입니다.
-    session을 하나만 생성하여 사용하며, start() 메소드를 통해 세션을 생성합니다.
-    close() 메소드를 통해 세션을 종료합니다.
-    
-    - 사용 예시:
+    APIClient is a class that wraps httpx.AsyncClient.
+    It uses a single session, created through the start() method.
+    The session is closed using the close() method.
+
+    Usage:
         api_client = APIClient()
         await api_client.start()
         async def get_example_1(api_client: APIClient):
@@ -38,8 +48,9 @@ class APIClient:
             get_example_1(api_client),
             get_example_2(api_client)
         )
-        await api_client.close()    
+        await api_client.close()
     """
+
     def __init__(self) -> None:
         self.session = None
 
@@ -72,14 +83,14 @@ class APIClient:
     ) -> httpx.Response:
         response = await self.session.put(url, json=json, **kwargs)
         return response
-    
+
     @ensure_session
     async def patch(
         self, url: str, json: dict[str, Any] | None = None, **kwargs: P
     ) -> httpx.Response:
         response = await self.session.patch(url, json=json, **kwargs)
         return response
-    
+
     def __del__(self) -> None:
         if self.session and not self.session.closed:
             warnings.warn("APIClient 객체가 close되지 않았습니다.")

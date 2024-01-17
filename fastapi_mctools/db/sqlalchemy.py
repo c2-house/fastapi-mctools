@@ -6,8 +6,9 @@ from sqlalchemy.orm import sessionmaker, Session
 
 class DB:
     """
-    db connection by sqlalchemy
-    get_db = DB(db_url)
+    db connection by sqlalchemy, Syncronous version
+    usage:
+        get_db = DB(db_url)
     """
 
     def __init__(self, db_url: str) -> None:
@@ -24,8 +25,9 @@ class DB:
 
 class AsyncDB:
     """
-    db connection by sqlalchemy
-    get_db = AsyncDB(db_url)
+    db connection by sqlalchemy, Asyncronous version
+    usage:
+        get_db = AsyncDB(db_url)
     """
 
     def __init__(self, db_url: str) -> None:

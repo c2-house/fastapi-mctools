@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 
 class TestConfDBManager:
     """
-    conftest.py에서 사용할 DBManager
-    테스트에 사용할 동기 DB, 비동기 DB를 생성합니다.
+    DBManager for use in conftest.py.
+    Creates synchronous and asynchronous databases for testing.
     """
 
     __test__ = False

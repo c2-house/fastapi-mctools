@@ -7,12 +7,12 @@ from starlette.types import Receive, Scope, Send
 
 class TrustedHostMiddleware(BaseTrustedHostMiddleware):
     """
-    loadbalancer health check를 위한 middleware
-    AWS의 ALB를 사용할 때 taget group의 health check 통과를 위한 임시 방편
-    VPC IP를 allowed_hosts에 추가해준다.
+    Middleware for load balancer health checks.
+    A temporary measure for passing the health check of a target group when using AWS's ALB.
+    Adds the VPC IP to the allowed_hosts.
 
     : allowed_hosts, list[str]
-    : first_two_vpc_ip, str, ex) "10.0"
+    : first_two_vpc_ip, str, example: "10.0"
     ----------------------------
     """
 

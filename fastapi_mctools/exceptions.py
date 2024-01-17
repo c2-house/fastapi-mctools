@@ -5,13 +5,15 @@ from fastapi.responses import JSONResponse
 
 class HTTPException(FastAPIHTTPException):
     """
-    Custom HTTPException class
-    ...
-    raise HTTPException(
-        status_code=404,
-        detail="Item not found",
-        code="NOT_FOOUND",
-    )
+    Custom HTTPException class.
+
+    usage:
+        ...
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found",
+            code="NOT_FOOUND",
+        )
     """
 
     def __init__(
@@ -39,9 +41,8 @@ class HTTPException(FastAPIHTTPException):
 
 async def handle_http_exception(request: Request, exc: HTTPException) -> JSONResponse:
     """
-    HTTPException을 JSONResponse로 변환하여 반환합니다.
+    Change HTTPException to JSONResponse.
     """
-    print(exc)
     return JSONResponse(
         status_code=exc.status_code,
         content=exc.attributes,
@@ -49,9 +50,9 @@ async def handle_http_exception(request: Request, exc: HTTPException) -> JSONRes
     )
 
 
-async def exception_handler(error: Exception) -> HTTPException:
+async def handle_500_exception(error: Exception) -> HTTPException:
     """
-    Exception을 HTTPException으로 변환하여 HTTP 상태 코드와 에러 메시지를 반환합니다.
+    Convert Exception to HTTPException to return HTTP status codes and error messages.
     """
     if not isinstance(error, HTTPException):
         error = HTTPException(

@@ -5,15 +5,15 @@ from fastapi_mctools.cache.base import CacheStrategy
 
 class MemoryCache(CacheStrategy):
     """
-    메모리 기반 캐싱 전략 클래스.
+    Memory-based caching strategy class.
 
     Attributes:
-        maxsize (int): 캐시의 최대 크기.
+        maxsize (int): The maximum size of the cache.
 
     Methods:
-        get: 메모리에서 키에 해당하는 값을 비동기적으로 가져옵니다.
-        set: 메모리에 키와 값을 비동기적으로 설정합니다.
-        delete: 메모리에서 키에 해당하는 캐시를 비동기적으로 삭제합니다.
+        get: Asynchronously retrieves a value corresponding to a key from memory.
+        set: Asynchronously sets a key and value in memory.
+        delete: Asynchronously deletes a cache entry corresponding to a key from memory.
     """
 
     def __init__(self, maxsize: int = 100) -> None:
@@ -23,14 +23,14 @@ class MemoryCache(CacheStrategy):
 
     async def get(self, key: str) -> Any:
         """
-        메모리에서 주어진 키에 해당하는 값을 비동기적으로 가져옵니다.
-        캐시에 키가 존재하면 값을 반환하고, 없으면 None을 반환합니다.
+        Asynchronously retrieves a value corresponding to a given key from memory.
+        Returns the value if the key exists in the cache, or None if it does not.
 
         Args:
-            key (str): 메모리에서 조회할 키.
+            key (str): The key to be looked up in memory.
 
         Returns:
-            Any: 키에 해당하는 캐시 값, 또는 None.
+            Any: The cache value corresponding to the key, or None.
         """
         async with self.lock:
             item = self.cache.get(key, (None, None))
@@ -45,12 +45,12 @@ class MemoryCache(CacheStrategy):
 
     async def set(self, key: str, value: Any, timeout: Optional[int] = None) -> None:
         """
-        메모리에 주어진 키와 값을 비동기적으로 설정합니다.
+        Asynchronously sets a given key and value in memory.
 
         Args:
-            key (str): 메모리에 저장할 키.
-            value (Any): 메모리에 저장할 값.
-            timeout (Optional[int]): 캐시의 만료 시간(초). 기본값은 None입니다.
+            key (str): The key to store in memory.
+            value (Any): The value to store in memory.
+            timeout (Optional[int]): The expiration time of the cache in seconds. Default is None.
         """
         current_time = await self._get_current_time()
         async with self.lock:
@@ -61,14 +61,20 @@ class MemoryCache(CacheStrategy):
 
     async def delete(self, key: str) -> None:
         """
-        메모리에서 주어진 키에 해당하는 캐시를 비동기적으로 삭제합니다.
+        Asynchronously deletes a cache entry corresponding to a given key from memory.
 
         Args:
-            key (str): 메모리에서 삭제할 키.
+            key (str): The key of the cache entry to be deleted from memory.
         """
         async with self.lock:
             if key in self.cache:
                 del self.cache[key]
 
     async def _get_current_time(self) -> float:
+        """
+        Retrieves the current time in the event loop.
+
+        Returns:
+            float: The current time.
+        """
         return asyncio.get_event_loop().time()

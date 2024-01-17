@@ -8,15 +8,15 @@ RedisType = Type[aioredis.Redis]
 
 class RedisCache(CacheStrategy):
     """
-    Redis를 사용하는 분산 캐싱 전략 클래스.
+    A caching strategy class using Redis.
 
     Attributes:
-        redis_url (str): Redis 서버의 URL.
+        redis_url (str): URL of the Redis server.
 
     Methods:
-        get: Redis에서 키에 해당하는 값을 비동기적으로 가져옵니다.
-        set: Redis에 키와 값을 비동기적으로 설정합니다.
-        delete: Redis에서 키에 해당하는 캐시를 비동기적으로 삭제합니다.
+        get: Asynchronously retrieves a value corresponding to a key from Redis.
+        set: Asynchronously sets a key and value in Redis.
+        delete: Asynchronously deletes a cache entry corresponding to a key from Redis.
     """
 
     def __init__(self, redis_url: str) -> None:
@@ -24,35 +24,34 @@ class RedisCache(CacheStrategy):
 
     async def get(self, key: str) -> Any:
         """
-        Redis에서 주어진 키에 해당하는 값을 비동기적으로 가져옵니다.
+        Asynchronously retrieves a value corresponding to a given key from Redis.
 
         Args:
-            key (str): Redis에서 조회할 키.
+            key (str): The key to be looked up in Redis.
 
         Returns:
-            Any: 키에 해당하는 캐시 값.
+            Any: The cache value corresponding to the key.
         """
-
         if await self.redis.exists(key):
             return await self.redis.get(key)
         return None
 
     async def set(self, key: str, value: Any, timeout: Optional[int] = None) -> None:
         """
-        Redis에 주어진 키와 값을 비동기적으로 설정합니다.
+        Asynchronously sets a given key and value in Redis.
 
         Args:
-            key (str): Redis에 저장할 키.
-            value (Any): Redis에 저장할 값.
-            timeout (Optional[int]): 캐시의 만료 시간(초). 기본값은 None입니다.
+            key (str): The key to store in Redis.
+            value (Any): The value to store in Redis.
+            timeout (Optional[int]): The expiration time of the cache in seconds. Default is None.
         """
         await self.redis.setex(key, timeout, value)
 
     async def delete(self, key: str) -> None:
         """
-        Redis에서 주어진 키에 해당하는 캐시를 비동기적으로 삭제합니다.
+        Asynchronously deletes a cache entry corresponding to a given key from Redis.
 
         Args:
-            key (str): Redis에서 삭제할 키.
+            key (str): The key of the cache entry to be deleted from Redis.
         """
         await self.redis.delete(key)
