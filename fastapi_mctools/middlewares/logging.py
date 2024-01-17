@@ -21,16 +21,16 @@ class RequestLoggingMixin:
         error=None,
     ) -> dict:
         """
-        로그 정보를 포함하는 딕셔너리를 생성합니다.
+        Creates a dictionary containing log information.
 
-        - request: HTTP 요청 객체
-        - response: HTTP 응답 객체
-        - status_code: HTTP 상태 코드
-        - tz_location: 시간대
-        - error: 발생한 에러, 있을 경우
+        - request: HTTP request object
+        - response: HTTP response object
+        - status_code: HTTP status code
+        - tz_location: Time zone
+        - error: Occurred error, if any
 
-        반환값:
-        로그 정보를 포함하는 딕셔너리
+        Return:
+        A dictionary containing log information
         """
         log_dict = {
             "URL": request.url.hostname + request.url.path,
@@ -71,6 +71,9 @@ class RequestLoggingMixin:
         return err_msg
 
     def get_status_code(self, response, error=None) -> int:
+        """
+        get status code from response or error.
+        """
         try:
             if error:
                 status_code = error.status_code
@@ -84,7 +87,7 @@ class RequestLoggingMixin:
 
     def is_pre_flight(self, request: Request):
         """
-        pre-flight 요청인지 확인합니다.
+        check if the request is pre-flight request.
         """
         method = str(request.method)
         if method == "OPTIONS":
@@ -93,13 +96,13 @@ class RequestLoggingMixin:
 
     def add_addtional_log(self, additional_log: dict, log_dict: dict) -> dict:
         """
-        로그 딕셔너리에 추가적인 로그를 추가합니다.
+        Add additional logs to the log dictionary.
 
-        additional_log: 추가할 로그 딕셔너리
-        log_dict: 기존 로그 딕셔너리
+        additional_log: log dictionary to add
+        log_dict: existing log dictionary
 
-        반환값:
-        추가된 로그 딕셔너리
+        Return:
+        Added Log Dictionary
         """
         log_dict.update(additional_log)
         return log_dict
@@ -116,9 +119,12 @@ class RequestLoggingMixin:
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
     """
-    Request 로깅 미들웨어
-    - FastAPI 앱에 추가하여 사용합니다.
-    - 요청과 응답에 대한 로그를 기록합니다.
+    Request Logging Middleware
+    - Add to FastAPI app to use.
+    - Logs requests and responses.
+    - You can skip health check requests by setting health_check_path.
+    - You can add additional logs by setting additional_log.
+    - If you set allowed_hosts, only requests from allowed_hosts will be logged.
     """
 
     def __init__(

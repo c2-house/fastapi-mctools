@@ -4,10 +4,10 @@ from fastapi import Depends, Form  # noqa F401
 
 class Dependency:
     """
-    FastAPI Depenedency를 관리하는 클래스입니다.
-    Endpoint에서 필요한 Dependency 여러개 임포트하기 귀찮아서 만들었습니다.
+    A class for managing FastAPI dependencies.
+    Created to avoid the hassle of importing multiple dependencies in the endpoint.
 
-    사용법:
+    Usage:
     async def get_user(db: DB) -> User:
         ...
         return user
@@ -43,9 +43,9 @@ class Dependency:
 
 def create_simple_form_dependency(input_dict: dict) -> type:
     """
-    FastAPI의 Form을 사용하는 클래스를 생성합니다.
-    일일히 Form을 적기 귀찮아서 만들었습니다.
-    class dependency로 사용할 수 있습니다.
+    Creates a class for using FastAPI's Form.
+    Developed to avoid the tedious task of repeatedly writing out the Form.
+    It can be used as a class dependency.
 
     사용법:
         * input : type 형식으로 입력합니다.

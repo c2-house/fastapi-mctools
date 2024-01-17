@@ -13,10 +13,13 @@ def time_checker(
     debug: bool = False, logger: Logger = None
 ) -> Callable[[Type[T]], Type[T]]:
     """
-    Async SQLAlchemy의 Query를 실행하는데 걸리는 시간을 측정합니다.
+    time checker decorator
 
-    :param debug: 디버그 모드를 활성화합니다. debug가 아니면 실행하지 않습니다.
-    :param logger: 로거를 지정합니다. 지정하지 않으면 AttributeError가 발생합니다.
+    Measures the time taken to execute a query in Async SQLAlchemy.
+
+    :param debug: Activates debug mode. If not in debug, it does not execute.
+    :param logger: Specifies a logger. If not specified, an AttributeError occurs.
+
 
     example:
 

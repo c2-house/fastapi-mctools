@@ -5,7 +5,7 @@ from fastapi_mctools.orms import ORMBase, T
 
 class ACreateBase(ORMBase):
     """
-    CreateBase는 일반적인 Create를 미리 구현해놓은 클래스입니다.
+    CreateBase is the preset of Create query.
     """
 
     async def create(self, db: AsyncSession, **kwargs) -> T:
@@ -29,7 +29,7 @@ class ACreateBase(ORMBase):
 
 class AReadBase(ORMBase):
     """
-    ReadBase는 많이 사용되는 Read 쿼리를 미리 구현해놓은 ORM입니다.
+    ReadBase is the preset of Read query.
     """
 
     async def get(
@@ -154,6 +154,10 @@ class AReadBase(ORMBase):
 
 
 class AUpdateBase(ORMBase):
+    """
+    UpdateBase is the preset of Update query.
+    """
+
     async def update_by_obj(self, db: AsyncSession, db_obj: T, **kwargs) -> T:
         """
         UPDATE {table_name(self.model)} SET {key1} = {value1}, {key2} = {value2}, ... WHERE id = {db_obj.id}
@@ -184,6 +188,10 @@ class AUpdateBase(ORMBase):
 
 
 class ADeleteBase(ORMBase):
+    """
+    DeleteBase is the preset of Delete query.
+    """
+
     async def delete(self, db: AsyncSession, db_obj: T) -> None:
         """
         DELETE FROM {table_name(self.model)} WHERE id = {db_obj.id}
