@@ -1,7 +1,7 @@
 import pytest
 from fastapi_mctools.exceptions import (
     HTTPException,
-    exception_handler,
+    handle_500_exception,
     handle_http_exception,
 )
 from fastapi import Request
@@ -30,8 +30,8 @@ def test_http_exception_attributes():
 
 
 @pytest.mark.asyncio
-async def test_exception_handler():
-    exception = await exception_handler(Exception("Test exception"))
+async def test_500_exception_handler():
+    exception = await handle_500_exception(Exception("Test exception"))
     assert exception.status_code == 500
     assert isinstance(exception, HTTPException)
 
