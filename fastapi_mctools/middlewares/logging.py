@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import StreamingResponse
 from starlette.concurrency import iterate_in_threadpool
-from fastapi_mctools.exceptions import exception_handler
+from fastapi_mctools.exceptions import handle_500_exception
 
 
 class RequestLoggingMixin:
@@ -170,7 +170,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
             )
         except Exception as e:
             # 500이상 에러 발생시
-            e = await exception_handler(e)
+            e = await handle_500_exception(e)
             status_code = self.get_status_code(None, e)
             log_dict = await self.get_log_dict(
                 request, None, status_code, e, additional_log=self.additional_log
