@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-mctools"
-version = "0.2.2"
+version = "0.2.3"
 description = "Fastapi mc style tools to make it easier to develop."
 authors = ["Jungminchae <minchae3618@gmail.com>"]
 readme = "README.md"
@@ -27,7 +27,7 @@ aiosqlite = "^0.19.0"
 pytest-mock = "^3.12.0"
 
 [tool.poetry.scripts]
-mct = "fastapi_mctools.commands.main:run_main"
+mct = "fastapi_mctools.commands.main:command_main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
