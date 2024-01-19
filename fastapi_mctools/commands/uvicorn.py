@@ -3,8 +3,13 @@ import subprocess
 from pathlib import Path
 
 
-@click.command("uvicorn", help="uvicorn 실행 command 출력")
+@click.group("run", help="실행 명령어 모음")
 def main():
+    pass
+
+
+@main.command(help="uvicorn 실행 command 출력")
+def show():
     """
     일일히 터미널에 입력하기 귀찮아서 만든 명령어
     출력되면 복사해서 터미널에 입력하면 됨
@@ -12,8 +17,8 @@ def main():
     click.echo("uvicorn app.main:app --reload --host 127.0.0.1")
 
 
-@main.command("run", help="uvicorn 서버 실행")
-def run():
+@main.command("dev", help="uvicorn 서버 실행")
+def dev():
     main_py = find_main_py()
 
     if main_py:
