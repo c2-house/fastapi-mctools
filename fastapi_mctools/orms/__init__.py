@@ -22,11 +22,11 @@ class ORMBase(Generic[T]):
 
     def get_result(self, result: T, columns: list) -> T:
         """
-        Column 전체 일 때(*)는 scalar_one()을 사용하고,
+        Column 전체 일 때(*)는 scalar_one_or_none()을 사용하고,
         몇 개의 Column을 선택할 때는 mappings().first()를 사용합니다.
         """
         if len(columns) == 1:
-            return result.scalar_one()
+            return result.scalar_one_or_none()
         return result.mappings().first()
 
     def get_results(self, results: list[T], columns: list) -> list[T]:
