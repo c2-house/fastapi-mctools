@@ -11,8 +11,9 @@ class TestConfDBManager:
 
     __test__ = False
 
-    def __init__(self, db_url: str) -> None:
+    def __init__(self, db_url: str, schema: str = None) -> None:
         self.db_url = db_url
+        self.schema = schema
 
     def get_db_session(self, is_meta: bool = False) -> Session:
         """
@@ -25,7 +26,7 @@ class TestConfDBManager:
         engine = create_engine(self.db_url)
 
         if is_meta:
-            meta = MetaData()
+            meta = MetaData(schema=self.schema)
             meta.create_all(engine)
 
         connection = engine.connect()
@@ -50,7 +51,7 @@ class TestConfDBManager:
         """
         engine = create_async_engine(self.db_url)
         if is_meta:
-            meta = MetaData()
+            meta = MetaData(schema=self.schema)
             async with engine.begin() as connection:
                 await connection.run_sync(meta.create_all)
 
