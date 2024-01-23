@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from fastapi_mctools.orms import T
 
 
 class TestConfDBManager:
@@ -11,9 +12,8 @@ class TestConfDBManager:
 
     __test__ = False
 
-    def __init__(self, db_url: str, schema: str = None) -> None:
+    def __init__(self, db_url: str) -> None:
         self.db_url = db_url
-        self.schema = schema
 
     def get_db_session(self, is_meta: bool = False) -> Session:
         """
@@ -40,7 +40,9 @@ class TestConfDBManager:
         connection.close()
         engine.dispose()
 
-    async def get_async_db_session(self, is_meta: bool = False) -> AsyncSession:
+    async def get_async_db_session(
+        self, base: T, is_meta: bool = False
+    ) -> AsyncSession:
         """
         사용:
 
@@ -51,9 +53,9 @@ class TestConfDBManager:
         """
         engine = create_async_engine(self.db_url)
         if is_meta:
-            meta = MetaData(schema=self.schema)
             async with engine.begin() as connection:
-                await connection.run_sync(meta.create_all)
+                await connection.run_sync(base.metadata.drop_all)
+                await connection.run_sync(base.metadata.create_all)
 
         async_session = async_sessionmaker(
             engine,
