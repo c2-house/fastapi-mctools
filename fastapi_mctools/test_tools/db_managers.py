@@ -26,7 +26,8 @@ class TestConfDBManager:
         engine = create_engine(self.db_url)
 
         if is_meta:
-            meta = MetaData(schema=self.schema)
+            meta = MetaData()
+            meta.drop_all(engine)
             meta.create_all(engine)
 
         connection = engine.connect()
@@ -41,7 +42,7 @@ class TestConfDBManager:
         engine.dispose()
 
     async def get_async_db_session(
-        self, base: T, is_meta: bool = False
+        self, base: T = None, is_meta: bool = False
     ) -> AsyncSession:
         """
         사용:
