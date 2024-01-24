@@ -123,7 +123,6 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
     - Add to FastAPI app to use.
     - Logs requests and responses.
     - You can skip health check requests by setting health_check_path.
-    - You can add additional logs by setting additional_log.
     - If you set allowed_hosts, only requests from allowed_hosts will be logged.
     """
 
@@ -133,14 +132,12 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
         logger: Logger,
         health_check_path: str | None = None,
         tz_location: str = "Asia/Seoul",
-        allowed_hosts: list[str] = None,
-        additional_log: dict = None,
+        allowed_hosts: list[str] | None = None,
     ) -> None:
         self.logger = logger
         self.health_check_path = health_check_path
         self.tz_location = tz_location
         self.allowed_hosts = allowed_hosts
-        self.additional_log = additional_log
         super().__init__(app)
 
     async def dispatch(self, request: Request, call_next):
@@ -151,12 +148,13 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
             else None
         )
         is_health_check_pass = False if not self.health_check_path else True
-        pass_case = (is_pre_flight, is_allowed_hosts, is_health_check_pass)
+        pass_case = (is_pre_flight, is_health_check_pass)
 
-        match pass_case:
-            case (True, False, False):
-                response = await call_next(request)
-                return response
+        if any(pass_case):
+            return await call_next(request)
+
+        if is_allowed_hosts is False:
+            return await call_next(request)
 
         return await self.process_log(request, call_next)
 
@@ -165,16 +163,12 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
             request.state.start_time = time.time()
             response = await call_next(request)
             status_code = self.get_status_code(response)
-            log_dict = await self.get_log_dict(
-                request, response, status_code, additional_log=self.additional_log
-            )
+            log_dict = await self.get_log_dict(request, response, status_code)
         except Exception as e:
             # 500이상 에러 발생시
             e = await handle_500_exception(e)
             status_code = self.get_status_code(None, e)
-            log_dict = await self.get_log_dict(
-                request, None, status_code, e, additional_log=self.additional_log
-            )
+            log_dict = await self.get_log_dict(request, None, status_code, e)
             log_str = ", ".join(f"{key}: {value}" for key, value in log_dict.items())
             self.logger.error(log_str)
             return JSONResponse(content={"detail": e.detail}, status_code=e.status_code)
@@ -189,11 +183,8 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
         response: StreamingResponse | None,
         status_code: int,
         error=None,
-        additional_log: dict = None,
     ):
         log_dict = await self.make_log_dict(
             request, response, status_code, self.tz_location, error
         )
-        if additional_log:
-            log_dict = self.add_addtional_log(additional_log, log_dict)
         return log_dict
