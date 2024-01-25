@@ -18,7 +18,6 @@ def test_app():
         health_check_path="/health",
         tz_location="Asia/Seoul",
         allowed_hosts=["testserver"],
-        additional_log={"key": "value"},
     )
     return app
 
