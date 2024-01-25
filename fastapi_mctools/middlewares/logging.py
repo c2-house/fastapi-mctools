@@ -147,7 +147,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
             if self.allowed_hosts
             else None
         )
-        is_health_check_pass = False if not self.health_check_path else True
+        is_health_check_pass = self.health_check_path == request.url.path
         pass_case = (is_pre_flight, is_health_check_pass)
 
         if any(pass_case):
