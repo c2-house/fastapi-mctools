@@ -2,6 +2,7 @@
 
 - MC(나)의 FastAPI로 개발할 때 자주 사용하는 코드들을 모아놓은 패키지입니다.
 - This is a package that contains frequently used codes when developing with FastAPI by MC(me).
+- This is kind of an utility package
 - [블로그](https://chaechae.life/blog/fastapi-my-library) 소개글 참고
 
 ## Installation
@@ -213,8 +214,75 @@ def create_user(form_data: FastAPIForm = Depends(), file: UploadFile = File()):
 
 ## Requests
 
+- APIClient
+- this is a class that can be used to make requests to external APIs only asynchronously
+- you can keep the session alive and reuse it
+- I normally use this in the lifespan of the app
+
+```python
+from fastapi_mctools.utils.requests import APIClient
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        api_client = APIClient()
+        await api_client.start()
+        states["api_client"] = api_client
+        logger.info(f"Start App: states {states}, Debug: {app_settings.DEBUG}")
+        yield
+        await api_client.close()
+    except Exception as e:
+        raise e
+```
+
 ## Responses
+
+- ResponseInterFace
+- this is an interface that can unify the response format ex) {"results" : data, "message": message, "status": status}
+
+```python
+from fastapi_mctools.utils.responses import ResponseInterFace
+
+
+async def get_user(user_id: int) -> ResponseInterFace:
+    user = await user_repository.get(user_id)
+    if user:
+        return ResponseInterFace(results=user, message="Success", temp_response_1="temp1", temp_response_2="temp2", status=200).to_dict()
+    return ResponseInterFace(results=None, message="Not Found", temp_response_1="temp1", temp_response_2="temp2", status=404).to_dict()
+
+
+```
 
 ## time
 
+- time_checker
+- this is a decorator that can be used to check orm query time
+
+```python
+
+from fastapi_mctools.utils.time import time_checker
+
+@time_checker(debug=True, logger=logger)
+class SomeRepository:
+    def get(self, db: AsyncSession, id: int) -> SomeModel:
+        ...
+
+temp = SomeRepository()
+temp.get(db, 1)  # SomeRepository.get took 0.01 ms
+```
+
 ## exceptions
+
+- HTTPException, handle_http_exception, handle_500_exception
+- HTTPException is a class that can be used instead of FastAPI's HTTPException, you can add more information to the exception response
+- handle_http_exception is exception handler that can be used to handle HTTPException, if you want to add more information with HTTPException, add this handler to app
+- handle_500_exception is exception handler that can be used to handle 500 error, it converts Exception to HTTPException and returns it
+
+```python
+from fastapi_mctools.exceptions import HTTPException, handle_http_exception, handle_500_exception
+
+async def temp_api():
+    raise HTTPException(status_code=400, detail="Bad Request", more_info="more info", code="TEMP_ERROR")
+
+app.add_exception_handler(HTTPException, handle_http_exception)
+```
