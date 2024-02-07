@@ -39,7 +39,7 @@ class MemoryCache(CacheStrategy):
 
             current_time = await self._get_current_time()
             if expire_at is not None and expire_at < current_time:
-                await self.delete(key)
+                del self.cache[key]
                 return None
 
             return value
