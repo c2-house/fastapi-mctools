@@ -32,9 +32,7 @@ class AReadBase(ORMBase):
     ReadBase is the preset of Read query.
     """
 
-    async def get(
-        self, db: AsyncSession, id: int | str, columns: list[str] | None = None
-    ) -> T:
+    async def get(self, db: AsyncSession, id: int | str, columns: list[str] | None = None) -> T:
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE id = {id}
         """
@@ -44,19 +42,14 @@ class AReadBase(ORMBase):
 
         return self.get_result(result, columns)
 
-    async def get_by_filters(
-        self, db: AsyncSession, columns: list[str] | None = None, **kwargs
-    ) -> T:
+    async def get_by_filters(self, db: AsyncSession, columns: list[str] | None = None, operator="eq", **kwargs) -> T:
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
 
-        filters = [
-            (getattr(self.model, k) == v)
-            for k, v in kwargs.items()
-            if hasattr(self.model, k)
-        ]
+        filters = self.get_filters_by_operator(kwargs, operator)
+
         query = select(*columns).filter(*filters)
         results = await db.execute(query)
         return self.get_result(results, columns)
@@ -88,6 +81,7 @@ class AReadBase(ORMBase):
         columns: list[str] | None = None,
         page: int | None = None,
         page_size: int | None = None,
+        operator="eq",
         **kwargs
     ):
         """
@@ -95,11 +89,7 @@ class AReadBase(ORMBase):
         """
         columns = self.get_columns(columns)
 
-        filters = [
-            (getattr(self.model, k) == v)
-            for k, v in kwargs.items()
-            if hasattr(self.model, k)
-        ]
+        filters = self.get_filters_by_operator(kwargs, operator)
         query = select(*columns).filter(*filters)
         if page and page_size:
             query = query.limit(page_size).offset(page_size * (page - 1))
@@ -176,9 +166,7 @@ class AUpdateBase(ORMBase):
         await db.execute(query)
         await db.commit()
 
-    async def update_by_filters(
-        self, db: AsyncSession, filters: list, **kwargs
-    ) -> None:
+    async def update_by_filters(self, db: AsyncSession, filters: list, **kwargs) -> None:
         """
         UPDATE {table_name(self.model)} SET {key1} = {value1}, {key2} = {value2}, ... WHERE {filters}
         """
