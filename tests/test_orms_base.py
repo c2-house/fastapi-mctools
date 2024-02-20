@@ -13,7 +13,10 @@ def MockModel():
 
 
 def test_orm_base_get_columns(MockModel):
-    orm_base = ORMBase(MockModel)
+    mock_model = MockModel
+    mock_model.column1 = "value1"
+    mock_model.column2 = "value2"
+    orm_base = ORMBase(mock_model)
     columns = ["column1", "column2"]
     result = orm_base.get_columns(columns)
     assert len(result) == 2
@@ -66,6 +69,8 @@ def test_orm_base_get_results_all(MockModel, mocker):
 
 def test_orm_base_get_filters_by_operator(MockModel):
     orm_base = ORMBase(MockModel)
+    orm_base.model.key1 = "value1"
+    orm_base.model.key2 = "value2"
     kwargs = {"key1": "value1", "key2": "value2"}
     operator = "eq"
     result = orm_base.get_filters_by_operator(kwargs, operator)
