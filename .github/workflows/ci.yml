@@ -1,6 +1,9 @@
 name: Lint and Test
 
 on:
+  push:
+    branches: [bug-fix-20270227]
+
   pull_request:
     branches: [main]
 
