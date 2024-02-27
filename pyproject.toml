@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "fastapi_mctools"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python =  ">=3.10,<4.0"
 click = "^8.1.5"
 fastapi = { version = "^0.100.0", optional = true }
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
