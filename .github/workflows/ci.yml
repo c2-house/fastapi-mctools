@@ -1,0 +1,52 @@
+name: Lint and Test
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Check black
+        uses: psf/black@stable
+        with:
+          options: "--check --verbose --line-length 140"
+          src: "./fastapi_mctools"
+          version: "~= 22.0"
+
+      - name: Check flake8
+        uses: py-actions/flake8@v2
+        with:
+          path: "./fastapi_mctools"
+
+  test:
+    name: Test after Lint
+    needs: lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Run tests
+        run: pytest
