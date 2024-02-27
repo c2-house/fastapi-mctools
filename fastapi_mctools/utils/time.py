@@ -9,9 +9,7 @@ T = TypeVar("T", bound=Callable[..., Any])
 R = TypeVar("R")
 
 
-def time_checker(
-    debug: bool = False, logger: Logger = None
-) -> Callable[[Type[T]], Type[T]]:
+def time_checker(debug: bool = False, logger: Logger = None) -> Callable[[Type[T]], Type[T]]:
     """
     time checker decorator
 
@@ -50,9 +48,7 @@ def time_checker(
             start = time.time()
             result = await method(*args, **kwargs)
             end = time.time()
-            logger.info(
-                f"{class_name}.{method.__name__} took {(end - start) * 1000:.2f} ms"
-            )
+            logger.info(f"{class_name}.{method.__name__} took {(end - start) * 1000:.2f} ms")
             return cast(R, result)
 
         return cast(T, wrapper)

@@ -71,9 +71,7 @@ class S3Storage:
 
     def get_all_items_in_folder(self, folder_path):
         try:
-            response = self.s3.list_objects_v2(
-                Bucket=self.bucket_name, Prefix=folder_path
-            )
+            response = self.s3.list_objects_v2(Bucket=self.bucket_name, Prefix=folder_path)
             return response.get("Contents", [])
         except ClientError as e:
             self.logger.error(e)

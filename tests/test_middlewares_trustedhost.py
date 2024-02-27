@@ -4,9 +4,7 @@ from fastapi import FastAPI
 from fastapi_mctools.middlewares.trustedhost import TrustedHostMiddleware
 
 app = FastAPI()
-app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=["example.com"], first_two_vpc_ip="10.0"
-)
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["example.com"], first_two_vpc_ip="10.0")
 
 
 @app.get("/")

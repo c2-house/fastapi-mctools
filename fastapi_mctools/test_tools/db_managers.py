@@ -41,9 +41,7 @@ class TestConfDBManager:
         connection.close()
         engine.dispose()
 
-    async def get_async_db_session(
-        self, base: T = None, is_meta: bool = False
-    ) -> AsyncSession:
+    async def get_async_db_session(self, base: T = None, is_meta: bool = False) -> AsyncSession:
         """
         사용:
 

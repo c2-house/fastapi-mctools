@@ -22,17 +22,16 @@ async def test_get(api_client: APIClient):
     assert response.status_code == 200
 
 
-async def test_post(api_client:APIClient):
+async def test_post(api_client: APIClient):
     response = await api_client.post("https://httpbin.org/post", json={"key": "value"})
     assert response.status_code == 200
-    
 
-async def test_put(api_client:APIClient):
+
+async def test_put(api_client: APIClient):
     response = await api_client.put("https://httpbin.org/put", json={"key": "value"})
     assert response.status_code == 200
-    
 
-async def test_patch(api_client:APIClient):
+
+async def test_patch(api_client: APIClient):
     response = await api_client.patch("https://httpbin.org/patch", json={"key": "value"})
     assert response.status_code == 200
-    
