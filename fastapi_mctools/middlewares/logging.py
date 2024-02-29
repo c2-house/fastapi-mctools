@@ -39,22 +39,13 @@ class RequestLoggingMixin:
             "IP": self.get_ip(request),
             "Error-Message": await self.get_err_msg(response, error),
             "User-Agent": request.headers.get("user-agent", None),
-            "Process-Time": str(
-                round((time.time() - request.state.start_time) * 1000, 5)
-            )
-            + "ms",
-            "Request-Time": datetime.now(ZoneInfo(tz_location)).strftime(
-                "%Y-%m-%d %H:%M:%S"
-            ),
+            "Process-Time": str(round((time.time() - request.state.start_time) * 1000, 5)) + "ms",
+            "Request-Time": datetime.now(ZoneInfo(tz_location)).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return log_dict
 
     def get_ip(self, request: Request) -> str:
-        ip = (
-            request.headers["x-forwarded-for"]
-            if "x-forwarded-for" in request.headers.keys()
-            else request.client.host
-        )
+        ip = request.headers["x-forwarded-for"] if "x-forwarded-for" in request.headers.keys() else request.client.host
         return ip.split(",")[0] if "," in ip else ip
 
     async def get_err_msg(self, response: StreamingResponse | None, error=None) -> str:
@@ -142,11 +133,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
 
     async def dispatch(self, request: Request, call_next):
         is_pre_flight = self.is_pre_flight(request)
-        is_allowed_hosts = (
-            self.check_allowed_hosts(request, self.allowed_hosts)
-            if self.allowed_hosts
-            else None
-        )
+        is_allowed_hosts = self.check_allowed_hosts(request, self.allowed_hosts) if self.allowed_hosts else None
         is_health_check_pass = self.health_check_path == request.url.path
         pass_case = (is_pre_flight, is_health_check_pass)
 
@@ -184,7 +171,5 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware, RequestLoggingMixin):
         status_code: int,
         error=None,
     ):
-        log_dict = await self.make_log_dict(
-            request, response, status_code, self.tz_location, error
-        )
+        log_dict = await self.make_log_dict(request, response, status_code, self.tz_location, error)
         return log_dict

@@ -44,11 +44,7 @@ class ReadBase(ORMBase):
         """
         columns = self.get_columns(columns)
 
-        filters = [
-            (getattr(self.model, k) == v)
-            for k, v in kwargs.items()
-            if hasattr(self.model, k)
-        ]
+        filters = [(getattr(self.model, k) == v) for k, v in kwargs.items() if hasattr(self.model, k)]
         return db.query(*columns).filter(*filters).first()
 
     def get_all(
@@ -66,37 +62,20 @@ class ReadBase(ORMBase):
         columns = self.get_columns(columns)
 
         if page and page_size:
-            return (
-                db.query(*columns).offset((page - 1) * page_size).limit(page_size).all()
-            )
+            return db.query(*columns).offset((page - 1) * page_size).limit(page_size).all()
         return db.query(*columns).all()
 
     def get_all_by_filters(
-        self,
-        db: Session,
-        page: int | None = None,
-        page_size: int | None = None,
-        columns: list[str] = None,
-        **kwargs
+        self, db: Session, page: int | None = None, page_size: int | None = None, columns: list[str] = None, **kwargs
     ) -> list[T]:
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
 
-        filters = [
-            (getattr(self.model, k) == v)
-            for k, v in kwargs.items()
-            if hasattr(self.model, k)
-        ]
+        filters = [(getattr(self.model, k) == v) for k, v in kwargs.items() if hasattr(self.model, k)]
         if page and page_size:
-            return (
-                db.query(*columns)
-                .filter(*filters)
-                .offset((page - 1) * page_size)
-                .limit(page_size)
-                .all()
-            )
+            return db.query(*columns).filter(*filters).offset((page - 1) * page_size).limit(page_size).all()
 
         return db.query(*columns).filter(*filters).all()
 

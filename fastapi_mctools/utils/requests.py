@@ -15,9 +15,7 @@ T = TypeVar("T", bound="APIClient")
 P = Union[ParamSpecArgs, ParamSpecKwargs]
 
 
-def ensure_session(
-    func: Callable[..., Coroutine[Any, Any, httpx.Response]]
-) -> Callable[..., Coroutine[Any, Any, httpx.Response]]:
+def ensure_session(func: Callable[..., Coroutine[Any, Any, httpx.Response]]) -> Callable[..., Coroutine[Any, Any, httpx.Response]]:
     @wraps(func)
     async def wrapper(self: T, *args: P, **kwargs: P) -> httpx.Response:
         if self.session is None:
@@ -64,30 +62,22 @@ class APIClient:
             self.session = None
 
     @ensure_session
-    async def get(
-        self, url: str, params: dict[str, Any] | None = None, **kwargs: P
-    ) -> httpx.Response:
+    async def get(self, url: str, params: dict[str, Any] | None = None, **kwargs: P) -> httpx.Response:
         response = await self.session.get(url, params=params, **kwargs)
         return response
 
     @ensure_session
-    async def post(
-        self, url: str, json: dict[str, Any] | None = None, **kwargs: P
-    ) -> httpx.Response:
+    async def post(self, url: str, json: dict[str, Any] | None = None, **kwargs: P) -> httpx.Response:
         response = await self.session.post(url, json=json, **kwargs)
         return response
 
     @ensure_session
-    async def put(
-        self, url: str, json: dict[str, Any] | None = None, **kwargs: P
-    ) -> httpx.Response:
+    async def put(self, url: str, json: dict[str, Any] | None = None, **kwargs: P) -> httpx.Response:
         response = await self.session.put(url, json=json, **kwargs)
         return response
 
     @ensure_session
-    async def patch(
-        self, url: str, json: dict[str, Any] | None = None, **kwargs: P
-    ) -> httpx.Response:
+    async def patch(self, url: str, json: dict[str, Any] | None = None, **kwargs: P) -> httpx.Response:
         response = await self.session.patch(url, json=json, **kwargs)
         return response
 

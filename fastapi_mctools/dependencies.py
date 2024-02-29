@@ -61,12 +61,8 @@ def create_simple_form_dependency(input_dict: dict) -> type:
             return form_data
     """
 
-    init_params_str = ", ".join(
-        f"{name}: {_type.__name__} = Form(...)" for name, _type in input_dict.items()
-    )
-    init_body_str = "\n        ".join(
-        f"self.{name} = {name}" for name in input_dict.keys()
-    )
+    init_params_str = ", ".join(f"{name}: {_type.__name__} = Form(...)" for name, _type in input_dict.items())
+    init_body_str = "\n        ".join(f"self.{name} = {name}" for name in input_dict.keys())
     init_method_str = f"def __init__(self, {init_params_str}):\n        {init_body_str}"
 
     class_def_str = f"class FastAPIForm:\n    {init_method_str}"

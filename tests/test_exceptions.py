@@ -15,18 +15,10 @@ def test_http_exception_attributes():
         headers={"Custom-Header": "Value"},
     )
 
-    assert (
-        custom_exception.status_code == 404
-    ), f"Expected 404, got {custom_exception.status_code}"
-    assert (
-        custom_exception.detail == "Item not found"
-    ), f"Expected 'Item not found', got {custom_exception.detail}"
-    assert (
-        custom_exception.code == "NOT_FOUND"
-    ), f"Expected 'NOT_FOUND', got {custom_exception.code}"
-    assert custom_exception.headers == {
-        "Custom-Header": "Value"
-    }, f"Expected {'Custom-Header': 'Value'}, got {custom_exception.headers}"
+    assert custom_exception.status_code == 404, f"Expected 404, got {custom_exception.status_code}"
+    assert custom_exception.detail == "Item not found", f"Expected 'Item not found', got {custom_exception.detail}"
+    assert custom_exception.code == "NOT_FOUND", f"Expected 'NOT_FOUND', got {custom_exception.code}"
+    assert custom_exception.headers == {"Custom-Header": "Value"}, f"Expected {'Custom-Header': 'Value'}, got {custom_exception.headers}"
 
 
 @pytest.mark.asyncio

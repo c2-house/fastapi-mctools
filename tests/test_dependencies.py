@@ -40,9 +40,7 @@ def client(dependency):
     app = FastAPI()
 
     @app.post("/users/{user_id}")
-    async def run_something_about_user(
-        user: dependency.GetUser, some: dependency.GetSomeThingsOfUser
-    ):
+    async def run_something_about_user(user: dependency.GetUser, some: dependency.GetSomeThingsOfUser):
         user = user.id == 1
         some = some.id == 1
         return {"user": user, "some": some}
