@@ -50,11 +50,11 @@ class ORMBase(Generic[T]):
                 return [(getattr(self.model, k) != v) for k, v in kwargs.items() if hasattr(self.model, k)]
             case "lt":
                 return [(getattr(self.model, k) < v) for k, v in kwargs.items() if hasattr(self.model, k)]
-            case "le":
+            case "lte":
                 return [(getattr(self.model, k) <= v) for k, v in kwargs.items() if hasattr(self.model, k)]
             case "gt":
                 return [(getattr(self.model, k) > v) for k, v in kwargs.items() if hasattr(self.model, k)]
-            case "ge":
+            case "gte":
                 return [(getattr(self.model, k) >= v) for k, v in kwargs.items() if hasattr(self.model, k)]
             case _:
                 raise ValueError("Invalid operator")

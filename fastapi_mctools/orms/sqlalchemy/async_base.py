@@ -30,6 +30,9 @@ class ACreateBase(ORMBase):
 class AReadBase(ORMBase):
     """
     ReadBase is the preset of Read query.
+    when using filter, the operator can be specified.
+    :param operator: eq, ne, lt, lte, gt, gte
+
     """
 
     async def get(self, db: AsyncSession, id: int | str, columns: list[str] | None = None) -> T:
