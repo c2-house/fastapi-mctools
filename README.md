@@ -118,8 +118,8 @@ async def create_user(db: AsyncSession, data: dict) -> User:
 
 async def read_user(db: AsyncSession, user_id: int) -> User:
     user =  await user_repository.get(db, user_id)
-    users = await user_repository.get_all_by_filters(db, age=20)
-    users_ages = await user_repository.get_all_by_filters(db, age=20, columns=['age'])
+    users = await user_repository.get_all_by_filters(db, age=20) # This will return data for users whose age is 20.
+    users_ages = await user_repository.get_all_by_filters(db, age=20, columns=['age'], operator="gt") # This will return data for users' age whoes age greater than 20.
     users_in = await user_repository.get_all_in(db, column='age', values=[20, 21]) # if you want to use not in, make `_not=True`
     users_like = await user_repository.get_all_like(db, column='name', value='mc')
     ...
