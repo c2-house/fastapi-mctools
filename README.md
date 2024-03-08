@@ -247,8 +247,8 @@ from fastapi_mctools.utils.responses import ResponseInterFace
 async def get_user(user_id: int) -> ResponseInterFace:
     user = await user_repository.get(user_id)
     if user:
-        return ResponseInterFace(results=user, message="Success", temp_response_1="temp1", temp_response_2="temp2", status=200).to_dict()
-    return ResponseInterFace(results=None, message="Not Found", temp_response_1="temp1", temp_response_2="temp2", status=404).to_dict()
+        return ResponseInterFace(results=user, message="Success", temp_response_1="temp1", temp_response_2="temp2", status=200)
+    return ResponseInterFace(results=None, message="Not Found", temp_response_1="temp1", temp_response_2="temp2", status=404)
 
 
 ```

@@ -18,3 +18,11 @@ def test_response_interface_to_str():
     response_dict = json.loads(response_to_str)
 
     assert response_dict == {"result": result, "key1": "value1", "key2": "value2"}
+
+
+def test_response_interface_unpacking():
+    result = "success"
+    kwargs = {"key1": "value1", "key2": "value2"}
+    response = ResponseInterFace(result, **kwargs)
+    response_dict = dict(**response)
+    assert response_dict == {"result": result, "key1": "value1", "key2": "value2"}
