@@ -239,6 +239,7 @@ async def lifespan(app: FastAPI):
 
 - ResponseInterFace
 - this is an interface that can unify the response format ex) {"results" : data, "message": message, "status": status}
+- it's not compatible with `response_model` in router.
 
 ```python
 from fastapi_mctools.utils.responses import ResponseInterFace
@@ -247,10 +248,21 @@ from fastapi_mctools.utils.responses import ResponseInterFace
 async def get_user(user_id: int) -> ResponseInterFace:
     user = await user_repository.get(user_id)
     if user:
-        return ResponseInterFace(results=user, message="Success", temp_response_1="temp1", temp_response_2="temp2", status=200)
-    return ResponseInterFace(results=None, message="Not Found", temp_response_1="temp1", temp_response_2="temp2", status=404)
+        return ResponseInterFace(result=user, message="Success", temp_response_1="temp1", temp_response_2="temp2", status=200)
+    return ResponseInterFace(result=None, message="Not Found", temp_response_1="temp1", temp_response_2="temp2", status=404)
 
 
+from pydantic import BaseModel
+
+class UserResponse(BaseModel)
+    # Let's assume that the model is defined
+    ...
+
+@router.get("/user/{user_id}")
+async def get_user(user_id: int):
+    ...
+    response = ResponseInterFace(result=user, message="Success", temp_response_1="temp1", temp_response_2="temp2", status=200)
+    return UserResponse(**response)
 ```
 
 ## time
