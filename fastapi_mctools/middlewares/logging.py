@@ -1,3 +1,4 @@
+import os
 import json
 import time
 from logging import Logger
@@ -33,16 +34,29 @@ class RequestLoggingMixin:
         A dictionary containing log information
         """
         log_dict = {
-            "URL": request.url.hostname + request.url.path,
+            "URL": self.get_url(request),
             "Method": request.method,
             "Status-Code": status_code,
             "IP": self.get_ip(request),
+            "PID": os.getpid(),
             "Error-Message": await self.get_err_msg(response, error),
             "User-Agent": request.headers.get("user-agent", None),
             "Process-Time": str(round((time.time() - request.state.start_time) * 1000, 5)) + "ms",
             "Request-Time": datetime.now(ZoneInfo(tz_location)).strftime("%Y-%m-%d %H:%M:%S"),
         }
         return log_dict
+
+    def get_url(self, request: Request) -> str:
+        """
+        Get the URL of the request.
+        """
+        if request.query_params:
+            params = request.query_params._dict
+            params = "&".join(f"{key}={value}" for key, value in params.items())
+            url = request.url.hostname + request.url.path + "?" + params
+        else:
+            url = request.url.hostname + request.url.path
+        return url
 
     def get_ip(self, request: Request) -> str:
         ip = request.headers["x-forwarded-for"] if "x-forwarded-for" in request.headers.keys() else request.client.host
