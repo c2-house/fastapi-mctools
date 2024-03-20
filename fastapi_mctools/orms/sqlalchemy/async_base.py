@@ -1,6 +1,7 @@
 from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_mctools.orms import ORMBase, T
+from fastapi_mctools.orms.sqlalchemy.filters import FilterBackend
 
 
 class ACreateBase(ORMBase):
@@ -85,14 +86,15 @@ class AReadBase(ORMBase):
         page: int | None = None,
         page_size: int | None = None,
         operator="eq",
-        **kwargs
+        filter_backend: FilterBackend = None,
+        **filters
     ):
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
 
-        filters = self.get_filters_by_operator(kwargs, operator)
+        filters = self.get_filters_by_operator(filters, operator)
         query = select(*columns).filter(*filters)
         if page and page_size:
             query = query.limit(page_size).offset(page_size * (page - 1))
