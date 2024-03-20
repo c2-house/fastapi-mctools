@@ -93,9 +93,12 @@ class AReadBase(ORMBase):
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
-
-        filters = self.get_filters_by_operator(filters, operator)
-        query = select(*columns).filter(*filters)
+        if filter_backend:
+            filters = filter_backend.compile()
+            query = select(*columns).filter(filters)
+        else:
+            filters = self.get_filters_by_operator(filters, operator)
+            query = select(*columns).filter(*filters)
         if page and page_size:
             query = query.limit(page_size).offset(page_size * (page - 1))
         results = await db.execute(query)
