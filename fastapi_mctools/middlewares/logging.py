@@ -50,12 +50,13 @@ class RequestLoggingMixin:
         """
         Get the URL of the request.
         """
+        scheme = request.url.scheme
         if request.query_params:
             params = request.query_params._dict
-            params = "&".join(f"{key}={value}" for key, value in params.items())
-            url = request.url.hostname + request.url.path + "?" + params
+            params_str = "&".join(f"{key}={value}" for key, value in params.items())
+            url = f"{scheme}://{request.url.hostname}{request.url.path}?{params_str}"
         else:
-            url = request.url.hostname + request.url.path
+            url = f"{scheme}://{request.url.hostname}{request.url.path}"
         return url
 
     def get_ip(self, request: Request) -> str:
