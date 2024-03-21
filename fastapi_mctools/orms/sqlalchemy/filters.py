@@ -11,7 +11,7 @@ class FilterBackend:
     def set_model(self, model: T) -> None:
         self.model = model
 
-    def add_filter(self, condition: dict, operator: str, is_and: bool = True) -> None:
+    def add_filter(self, condition: dict, operator: str = "eq", is_and: bool = True) -> None:
         """
         Adds a filter to the filter list.
 
