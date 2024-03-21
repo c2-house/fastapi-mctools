@@ -60,6 +60,7 @@ class AReadBase(ORMBase):
         """
         columns = self.get_columns(columns)
         if filter_backend:
+            filter_backend.set_model(self.model)
             filters = filter_backend.compile()
             query = select(*columns).filter(filters)
         else:
