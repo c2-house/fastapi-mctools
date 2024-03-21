@@ -49,10 +49,10 @@ class AReadBase(ORMBase):
         self,
         db: AsyncSession,
         columns: list[str] | None = None,
-        page: int | None = None,
-        page_size: int | None = None,
         operator="eq",
         filter_backend: FilterBackend = None,
+        page: int | None = None,
+        page_size: int | None = None,
         **filters
     ):
         """
