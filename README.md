@@ -87,9 +87,11 @@ app.add_middleware(RequestLoggingMiddleware, logger=logger)
 - sync_base, async_base
 - these are kind of repositories for frequently used ORM operations, such as CRUD
 - if not putting any column name, it will use all columns in the model
+- can use filterbackend for filtering data
 
 ```python
-from fastapi_mctools.orms import sync_base, async_base
+from fastapi_mctools.orms.sqlalchemy import sync_base, async_base
+from fastapi_mctools.orms.filters import FilterBackend
 
 class UserCreate(async_base.ACreateBase):
     ...
@@ -117,11 +119,15 @@ async def create_user(db: AsyncSession, data: dict) -> User:
     return await user_repository.create(db, **data)
 
 async def read_user(db: AsyncSession, user_id: int) -> User:
-    user =  await user_repository.get(db, user_id)
-    users = await user_repository.get_all_by_filters(db, age=20) # This will return data for users whose age is 20.
-    users_ages = await user_repository.get_all_by_filters(db, age=20, columns=['age'], operator="gt") # This will return data for users' age whoes age greater than 20.
-    users_in = await user_repository.get_all_in(db, column='age', values=[20, 21]) # if you want to use not in, make `_not=True`
-    users_like = await user_repository.get_all_like(db, column='name', value='mc')
+    user =  await user_repository.get_by_id(db, user_id)
+    users = await user_repository.get_by_filters(db, age=20) # This will return data for users whose age is 20.
+    ...
+
+async def read_user_with_filterbackend(db: AsyncSession, user_id: int) -> User:
+    filter_backend = FilterBackend()
+    filter_backend.add_filter("age", 20)
+    filter_backend.add_filter("name", "%test%")
+    users = await user_repository.get_by_filters(db, filter_backend=filter_backend) # This will return data for users whose age is 20 and name contains "test"
     ...
 
 # update and delete are similar to create and read

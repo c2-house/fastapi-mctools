@@ -1,6 +1,7 @@
 from sqlalchemy import select, update, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_mctools.orms import ORMBase, T
+from fastapi_mctools.orms.sqlalchemy.filters import FilterBackend
 
 
 class ACreateBase(ORMBase):
@@ -35,115 +36,40 @@ class AReadBase(ORMBase):
 
     """
 
-    async def get(self, db: AsyncSession, id: int | str, columns: list[str] | None = None) -> T:
+    async def get_by_id(self, db: AsyncSession, id: int | str, columns: list[str] | None = None) -> T:
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE id = {id}
         """
         columns = self.get_columns(columns)
         query = select(*columns).filter(self.model.id == id)
         result = await db.execute(query)
-
         return self.get_result(result, columns)
 
-    async def get_by_filters(self, db: AsyncSession, columns: list[str] | None = None, operator="eq", **kwargs) -> T:
-        """
-        SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
-        """
-        columns = self.get_columns(columns)
-
-        filters = self.get_filters_by_operator(kwargs, operator)
-
-        query = select(*columns).filter(*filters)
-        results = await db.execute(query)
-        return self.get_result(results, columns)
-
-    async def get_all(
+    async def get_by_filters(
         self,
         db: AsyncSession,
         columns: list[str] | None = None,
-        page: int | None = None,
-        page_size: int | None = None,
-    ):
-        """
-        SELECT * or ... FROM {table_name(self.model)}
-
-        or
-
-        SELECT * or ... FROM {table_name(self.model)} LIMIT {page_size} OFFSET {page * page_size}
-        """
-        columns = self.get_columns(columns)
-        query = select(*columns)
-        if page and page_size:
-            query = query.limit(page_size).offset(page_size * (page - 1))
-        results = await db.execute(query)
-        return self.get_results(results, columns)
-
-    async def get_all_by_filters(
-        self,
-        db: AsyncSession,
-        columns: list[str] | None = None,
-        page: int | None = None,
-        page_size: int | None = None,
         operator="eq",
-        **kwargs
+        filter_backend: FilterBackend = None,
+        page: int | None = None,
+        page_size: int | None = None,
+        **filters
     ):
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
-
-        filters = self.get_filters_by_operator(kwargs, operator)
-        query = select(*columns).filter(*filters)
+        if filter_backend:
+            filter_backend.set_model(self.model)
+            filters = filter_backend.compile()
+            query = select(*columns).filter(filters)
+        else:
+            filters = self.get_filters_by_operator(filters, operator)
+            query = select(*columns).filter(*filters)
         if page and page_size:
             query = query.limit(page_size).offset(page_size * (page - 1))
         results = await db.execute(query)
         return self.get_results(results, columns)
-
-    async def get_by_in(
-        self,
-        db: AsyncSession,
-        column: str,
-        values: list[str],
-        columns: list[str] | None = None,
-        _not=False,
-    ) -> list[T]:
-        """
-        SELECT * FROM {table_name(self.model)} WHERE {column} IN ({values})
-        or
-        SELECT * FROM {table_name(self.model)} WHERE {column} NOT IN ({values})
-        """
-        columns = self.get_columns(columns)
-
-        query = select(*columns)
-        if _not:
-            query = query.filter(~getattr(self.model, column).in_(values))
-        else:
-            query = query.filter(getattr(self.model, column).in_(values))
-        result = await db.execute(query)
-        return self.get_results(result, columns)
-
-    async def get_by_like(
-        self,
-        db: AsyncSession,
-        column: str,
-        value: str,
-        columns: list[str] | None = None,
-        _not=False,
-    ) -> list[T]:
-        """
-        SELECT * FROM {table_name(self.model)} WHERE {column} LIKE {value}
-        or
-        SELECT * FROM {table_name(self.model)} WHERE {column} NOT LIKE {value}
-        """
-        columns = self.get_columns(columns)
-
-        query = select(*columns)
-        if _not:
-            query = query.filter(~getattr(self.model, column).like(value))
-        else:
-            query = query.filter(getattr(self.model, column).like(value))
-        result = await db.execute(query)
-        return self.get_results(result, columns)
 
 
 class AUpdateBase(ORMBase):
