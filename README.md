@@ -15,14 +15,24 @@ pip install fastapi-mctools
 
 ### CLI
 
-### 1. run
+### 1-1. run dev
 
-- run uvicorn server for development
+- run uvicorn server for development, this command wraps uvicorn command.
 - this command will find `main.py` and run uvicorn server
-- use this command when running in local environment
+- use this command when running in local environment and use --port and --host for setting port and host. default is 8000 and 127.0.0.1
 
 ```bash
 mct run dev
+```
+
+### 1-2. run prod
+
+- run gunicorn server for production, this command wraps gunicorn command.
+- this command will find `gunicorn.config.py` and run gunicorn server
+- if not existing `gunicorn.config.py`, it will make basic gunicorn config file
+
+```bash
+mct run prod
 ```
 
 ### 2. startproject
