@@ -49,4 +49,7 @@ def main():
 
     for template, file in zip(TEMPLATES, FILES):
         with resources.path(TEMPLATE_PATH, template) as template_path:
-            shutil.copy(str(template_path), "./app/" + file)
+            if file in [".gitignore", ".pre-commit-config.yaml"]:
+                shutil.copy(str(template_path), "./" + file)
+            else:
+                shutil.copy(str(template_path), "./app/" + file)
