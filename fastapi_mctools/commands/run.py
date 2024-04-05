@@ -18,7 +18,9 @@ def show():
 
 
 @main.command("dev", help="uvicorn 서버 실행")
-def dev():
+@click.option("--host", default="127.0.0.1", help="서버 호스트 주소")
+@click.option("--port", default=8000, help="서버 포트 번호")
+def dev(port: int, host: str):
     main_py = find_main_py()
 
     if main_py:
@@ -30,7 +32,9 @@ def dev():
             f"{module_path}:app",
             "--reload",
             "--host",
-            "127.0.0.1",
+            host,
+            "--port",
+            str(port),
         ]
         subprocess.run(uvicorn_command)
     else:
