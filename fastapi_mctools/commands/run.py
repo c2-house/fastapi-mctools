@@ -18,7 +18,9 @@ def show():
 
 
 @main.command("dev", help="uvicorn 서버 실행")
-def dev():
+@click.option("--host", default="127.0.0.1", help="서버 호스트 주소")
+@click.option("--port", default=8000, help="서버 포트 번호")
+def dev(port: int, host: str):
     main_py = find_main_py()
 
     if main_py:
@@ -30,7 +32,9 @@ def dev():
             f"{module_path}:app",
             "--reload",
             "--host",
-            "127.0.0.1",
+            host,
+            "--port",
+            str(port),
         ]
         subprocess.run(uvicorn_command)
     else:
@@ -42,5 +46,30 @@ def find_main_py():
     현재 디렉토리부터 시작하여 main.py 파일을 찾습니다.
     """
     for path in Path(".").rglob("main.py"):
+        return path
+    return None
+
+
+@main.command("prod", help="gunicorn 서버 실행")
+def prod():
+    def run_gunicorn():
+        gunicorn_config = find_gunicorn_config()
+
+        if gunicorn_config:
+            gunicorn_command = ["gunicorn", "-c", str(gunicorn_config)]
+            subprocess.run(gunicorn_command)
+        else:
+            # when gunicorn_config not found, make it by mct gunicorn
+            subprocess.run(["mct", "gunicorn"])
+            run_gunicorn()
+
+    run_gunicorn()
+
+
+def find_gunicorn_config():
+    """
+    현재 디렉토리부터 시작하여 gunicorn.config.py 파일을 찾습니다.
+    """
+    for path in Path(".").rglob("gunicorn.config.py"):
         return path
     return None

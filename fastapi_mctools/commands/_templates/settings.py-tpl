@@ -11,7 +11,8 @@ config = AutoConfig(search_path=BASE_DIR)
 class AppSettings(BaseSettings):
     DEBUG: bool = config("DEBUG", cast=bool, default=True)
     OPENAPI_URL: str | None = "/openapi.json" if DEBUG else None
-    API_PREFIX: str = "/api/v1/dev" if DEBUG else "/api/v1"
+    API_PREFIX: str = "/api/v1"
+    DB_URL: str = ""
     TIMEZONE_LOCATION: str = "Asia/Seoul"
     ALLOWED_HOSTS: list = []
     CORS_ORIGINS: list = []
@@ -76,3 +77,6 @@ class AppSettings(BaseSettings):
     @property
     def TIMEZONE(self) -> ZoneInfo:
         return ZoneInfo(self.TIMEZONE_LOCATION)
+
+
+settings = AppSettings()
