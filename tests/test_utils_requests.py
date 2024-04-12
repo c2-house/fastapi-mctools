@@ -18,7 +18,7 @@ async def test_start(api_client: APIClient):
 
 
 async def test_get(api_client: APIClient):
-    response = await api_client.get("https://httpbin.org/get")
+    response = await api_client.get("https://www.google.com")
     assert response.status_code == 200
 
 

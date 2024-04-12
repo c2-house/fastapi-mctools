@@ -61,6 +61,29 @@ mct gunicorn
 mct types <path: directory or file>
 ```
 
+### 5. shell
+
+- simple ipython shell
+- need to install ipython
+
+```bash
+mct shell
+```
+
+```python
+# in ipython shell
+# need to import session that made by generator or async generator
+
+# sync session
+from app.session import get_db
+db = next(get_db())
+
+# async session
+from app.session import get_db
+db = await anxet(get_db())
+
+```
+
 ## DB Session
 
 - DB, AsyncDB
