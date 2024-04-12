@@ -20,7 +20,7 @@ class InteractiveShellLauncher:
 
 
 @click.command("shell", help="Launches an interactive shell")
-def shell():
+def main():
     """Launches an interactive shell"""
     launcher = InteractiveShellLauncher()
     launcher.start_ipython()

@@ -61,6 +61,15 @@ mct gunicorn
 mct types <path: directory or file>
 ```
 
+### 5. shell
+
+- simple ipython shell
+- need to install ipython
+
+```bash
+mct shell
+```
+
 ## DB Session
 
 - DB, AsyncDB
