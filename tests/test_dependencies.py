@@ -52,6 +52,15 @@ def test_dependency_instance(dependency):
     assert isinstance(dependency, Dependency)
 
 
+def test_dependency_getitem(dependency):
+    assert dependency[0] == dependency.GetUser
+
+
+def test_dependency_getitem_error(dependency):
+    with pytest.raises(IndexError):
+        dependency[2]
+
+
 def test_run_something_about_user(client):
     response = client.post("/users/1", json={"test": "test"})
     assert response.status_code == 200
