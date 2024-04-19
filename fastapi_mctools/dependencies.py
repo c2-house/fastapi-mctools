@@ -40,6 +40,13 @@ class Dependency:
             value = Annotated[return_type, Depends(value)]
             setattr(self, key, value)
 
+    def __getitem__(self, index: int) -> Annotated:
+        try:
+            values = list(self.__dict__.values())[index]
+            return values
+        except IndexError:
+            raise IndexError(f"{self.__class__.__name__} has only {len(self.__dict__)} dependency.")
+
 
 def create_simple_form_dependency(input_dict: dict) -> type:
     """
