@@ -216,15 +216,15 @@ temp_dep = Dependency(
 # in your route
 
 @app.get('/temp_1')
-async def temp_1(result: temp_dep.TempDep1):
+async def temp_1(result: temp_dep.TempDep1): # temp_dep[0] is possible
     return result
 
 @app.get('/temp_2')
-async def temp_2(result: temp_dep.TempDep2):
+async def temp_2(result: temp_dep.TempDep2): # temp_dep[1] is possible
     return result
 
 @app.get('/temp_3')
-async def temp_3(result: temp_dep.TempDep3):
+async def temp_3(result: temp_dep.TempDep3): # temp_dep[2] is possible
     return result
 
 ```
