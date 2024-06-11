@@ -341,7 +341,7 @@ app.add_exception_handler(HTTPException, handle_http_exception)
 ## Lifespan
 
 - Lifespan is the class that can be used to manage the startup and shutdown of the app
-- just make lifespan simple by using class
+- Just make lifespan simple by using class
 
 ```python
 from fastapi_mctools.lifespan import Lifespan
