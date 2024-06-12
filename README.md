@@ -337,3 +337,31 @@ async def temp_api():
 
 app.add_exception_handler(HTTPException, handle_http_exception)
 ```
+
+## Lifespan
+
+- Lifespan is the class that can be used to manage the startup and shutdown of the app
+- Just make lifespan simple by using class
+
+```python
+from fastapi_mctools.lifespan import Lifespan
+from fastapi import FastAPI
+
+async def async_hello(name):
+    print(f"Hello async world, {name}")
+
+def get_states():
+    return {
+        "state_1": "state_1",
+        "state_2": "state_2"
+    }
+
+lifespan = Lifespan()
+lifespan.add_startup(print, "Hello world")
+lifespan.add_startup(async_hello, name="mingke")
+lifespan.add_shutdown(print, "Goodbye world")
+lifespan.states = get_states
+
+app = FastAPI(lifespan = lifespan.lifespan)
+
+```
