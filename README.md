@@ -158,8 +158,9 @@ async def read_user(db: AsyncSession, user_id: int) -> User:
 
 async def read_user_with_filterbackend(db: AsyncSession, user_id: int) -> User:
     filter_backend = FilterBackend()
-    filter_backend.add_filter("age", 20)
-    filter_backend.add_filter("name", "%test%")
+    filter_backend.set_model(User)
+    filter_backend.add_filter({"age": 20})
+    filter_backend.add_filter({"name": "%test%"})
     users = await user_repository.get_by_filters(db, filter_backend=filter_backend) # This will return data for users whose age is 20 and name contains "test"
     ...
 
