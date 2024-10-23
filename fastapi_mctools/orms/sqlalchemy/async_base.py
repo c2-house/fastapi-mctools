@@ -36,7 +36,9 @@ class AReadBase(ORMBase):
 
     """
 
-    async def get_by_id(self, db: AsyncSession, id: int | str, columns: list[str] | None = None) -> T:
+    async def get_by_id(
+        self, db: AsyncSession, id: int | str, columns: list[str] | None = None
+    ) -> T:
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE id = {id}
         """
@@ -53,14 +55,13 @@ class AReadBase(ORMBase):
         filter_backend: FilterBackend = None,
         page: int | None = None,
         page_size: int | None = None,
-        **filters
+        **filters,
     ):
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
         if filter_backend:
-            filter_backend.set_model(self.model)
             filters = filter_backend.compile()
             query = select(*columns).filter(filters)
         else:
@@ -95,7 +96,9 @@ class AUpdateBase(ORMBase):
         await db.execute(query)
         await db.commit()
 
-    async def update_by_filters(self, db: AsyncSession, filters: list, **kwargs) -> None:
+    async def update_by_filters(
+        self, db: AsyncSession, filters: list, **kwargs
+    ) -> None:
         """
         UPDATE {table_name(self.model)} SET {key1} = {value1}, {key2} = {value2}, ... WHERE {filters}
         """
