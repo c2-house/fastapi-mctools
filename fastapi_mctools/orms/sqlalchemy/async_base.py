@@ -53,14 +53,13 @@ class AReadBase(ORMBase):
         filter_backend: FilterBackend = None,
         page: int | None = None,
         page_size: int | None = None,
-        **filters
+        **filters,
     ):
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...
         """
         columns = self.get_columns(columns)
         if filter_backend:
-            filter_backend.set_model(self.model)
             filters = filter_backend.compile()
             query = select(*columns).filter(filters)
         else:
