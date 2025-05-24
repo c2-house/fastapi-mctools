@@ -2,6 +2,7 @@ import pytest
 from fastapi_mctools.cache import MemoryCache
 
 
+@pytest.mark.it("인메모리 캐시 동작 테스트")
 @pytest.mark.asyncio
 async def test_memory_cache_set_and_get():
     cache = MemoryCache(maxsize=2)

@@ -32,6 +32,7 @@ mct = "fastapi_mctools.commands.main:command_main"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+addopts = "-s --testdox"
 
 
 [build-system]
