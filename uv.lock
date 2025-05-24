@@ -134,7 +134,7 @@ wheels = [
 [[package]]
 name = "fastapi-mctools"
 version = "0.5.1"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "boto3" },
     { name = "click" },
