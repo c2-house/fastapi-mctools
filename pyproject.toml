@@ -8,29 +8,23 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
 dependencies = [
-    "click>=8.1.5",
-    "fastapi>=0.100.0; extra == 'fastapi'",
-    "sqlalchemy[asyncio]>=2.0.23",
-    "boto3>=1.28.63; extra == 'boto3'",
-    "httpx>=0.25.0; extra == 'httpx'",
-    "redis>=5.0.1; extra == 'redis'"
+    "boto3>=1.38.23",
+    "click>=8.2.1",
+    "fastapi>=0.115.12",
+    "httpx>=0.28.1",
+    "redis>=6.1.0",
+    "sqlalchemy[asyncio]>=2.0.41",
 ]
 
-[project.optional-dependencies]
-all = [
-    "fastapi",
-    "sqlalchemy[asyncio]",
-    "boto3",
-    "httpx",
-    "redis"
-]
+[dependency-groups]
 dev = [
-    "pytest>=7.4.2",
-    "pytest-asyncio>=0.21.1",
-    "pymysql>=1.1.0",
-    "aiosqlite>=0.19.0",
-    "pytest-mock>=3.12.0"
+    "aiosqlite>=0.21.0",
+    "pymysql>=1.1.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "pytest-mock>=3.14.0",
 ]
+
 
 [project.scripts]
 mct = "fastapi_mctools.commands.main:command_main"
@@ -40,6 +34,13 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 addopts = "-s --testdox"
 
+[tool.ruff]
+line-length = 130
+
+[tool.uv.build-backend]
+module-name = "fastapi_mctools"
+module-root = ""
+
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.7.8,<0.8.0"]
+build-backend = "uv_build"

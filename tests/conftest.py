@@ -7,8 +7,7 @@ from fastapi_mctools.test_tools.db_managers import TestConfDBManager
 test_db_manager = TestConfDBManager("sqlite:///example.db")
 
 
-class Base(DeclarativeBase):
-    ...
+class Base(DeclarativeBase): ...
 
 
 class Item(Base):

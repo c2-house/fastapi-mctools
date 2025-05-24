@@ -15,7 +15,9 @@ T = TypeVar("T", bound="APIClient")
 P = Union[ParamSpecArgs, ParamSpecKwargs]
 
 
-def ensure_session(func: Callable[..., Coroutine[Any, Any, httpx.Response]]) -> Callable[..., Coroutine[Any, Any, httpx.Response]]:
+def ensure_session(
+    func: Callable[..., Coroutine[Any, Any, httpx.Response]],
+) -> Callable[..., Coroutine[Any, Any, httpx.Response]]:
     @wraps(func)
     async def wrapper(self: T, *args: P, **kwargs: P) -> httpx.Response:
         if self.session is None:

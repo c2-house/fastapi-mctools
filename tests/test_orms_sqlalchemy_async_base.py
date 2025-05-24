@@ -6,11 +6,9 @@ from fastapi_mctools.orms.sqlalchemy.filters import FilterBackend
 class TestAsyncBase:
     @pytest.fixture
     def orm_obj(self, item):
-        class Create(ACreateBase):
-            ...
+        class Create(ACreateBase): ...
 
-        class Read(AReadBase):
-            ...
+        class Read(AReadBase): ...
 
         class ORM(Read, Create):
             def __init__(self, model):
@@ -34,7 +32,15 @@ class TestAsyncBase:
 
     @pytest.mark.asyncio
     async def test_read_with_filter_backend(self, orm_obj, async_db):
-        await orm_obj.bulk_create(async_db, [{"name": "fast"}, {"name": "api"}, {"name": "test123"}, {"name": "test456"}])
+        await orm_obj.bulk_create(
+            async_db,
+            [
+                {"name": "fast"},
+                {"name": "api"},
+                {"name": "test123"},
+                {"name": "test456"},
+            ],
+        )
         filter_backend = FilterBackend()
         filter_backend.set_model(orm_obj.model)
         filter_backend.add_filter({"name": "%test%"}, "like")
