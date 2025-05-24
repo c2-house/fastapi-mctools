@@ -1,32 +1,38 @@
-[tool.poetry]
+[project]
 name = "fastapi-mctools"
 version = "0.5.1"
 description = "Fastapi mc style tools to make it easier to develop."
-authors = ["Jungminchae <minchae3618@gmail.com>"]
+authors = [
+    {name = "Jungminchae", email = "minchae3618@gmail.com"}
+]
 readme = "README.md"
-packages = [{include = "fastapi_mctools"}]
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "click>=8.1.5",
+    "fastapi>=0.100.0; extra == 'fastapi'",
+    "sqlalchemy[asyncio]>=2.0.23",
+    "boto3>=1.28.63; extra == 'boto3'",
+    "httpx>=0.25.0; extra == 'httpx'",
+    "redis>=5.0.1; extra == 'redis'"
+]
 
-[tool.poetry.dependencies]
-python =  ">=3.10,<4.0"
-click = "^8.1.5"
-fastapi = { version = "^0.100.0", optional = true }
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.23"}
-boto3 =  { version = "^1.28.63", optional = true }
-httpx = { version = "^0.25.0", optional = true }
-redis = { version = "^5.0.1", optional = true }
+[project.optional-dependencies]
+all = [
+    "fastapi",
+    "sqlalchemy[asyncio]",
+    "boto3",
+    "httpx",
+    "redis"
+]
+dev = [
+    "pytest>=7.4.2",
+    "pytest-asyncio>=0.21.1",
+    "pymysql>=1.1.0",
+    "aiosqlite>=0.19.0",
+    "pytest-mock>=3.12.0"
+]
 
-
-[tool.poetry.extras]
-all = [ "fastapi", "sqlalchemy", "boto3", "httpx", "redis" ]
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.2"
-pytest-asyncio = "^0.21.1"
-pymysql = "^1.1.0"
-aiosqlite = "^0.19.0"
-pytest-mock = "^3.12.0"
-
-[tool.poetry.scripts]
+[project.scripts]
 mct = "fastapi_mctools.commands.main:command_main"
 
 [tool.pytest.ini_options]
@@ -34,7 +40,6 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 addopts = "-s --testdox"
 
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
