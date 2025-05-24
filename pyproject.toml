@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-mctools"
-version = "0.5.1"
+version = "0.5.2"
 description = "Fastapi mc style tools to make it easier to develop."
 authors = [
     {name = "Jungminchae", email = "minchae3618@gmail.com"}
@@ -23,6 +23,7 @@ dev = [
     "pytest>=8.3.5",
     "pytest-asyncio>=0.26.0",
     "pytest-mock>=3.14.0",
+    "pytest-testdox>=3.1.0",
 ]
 
 
@@ -32,6 +33,7 @@ mct = "fastapi_mctools.commands.main:command_main"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 addopts = "-s --testdox"
 
 [tool.ruff]
