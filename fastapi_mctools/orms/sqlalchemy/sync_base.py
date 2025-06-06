@@ -66,7 +66,12 @@ class ReadBase(ORMBase):
         return db.query(*columns).all()
 
     def get_all_by_filters(
-        self, db: Session, page: int | None = None, page_size: int | None = None, columns: list[str] = None, **kwargs
+        self,
+        db: Session,
+        page: int | None = None,
+        page_size: int | None = None,
+        columns: list[str] = None,
+        **kwargs,
     ) -> list[T]:
         """
         SELECT * or ... FROM {table_name(self.model)} WHERE {key} = {value} AND ...

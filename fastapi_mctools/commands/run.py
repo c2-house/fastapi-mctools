@@ -8,15 +8,6 @@ def main():
     pass
 
 
-@main.command(help="uvicorn 실행 command 출력")
-def show():
-    """
-    일일히 터미널에 입력하기 귀찮아서 만든 명령어
-    출력되면 복사해서 터미널에 입력하면 됨
-    """
-    click.echo("uvicorn app.main:app --reload --host 127.0.0.1")
-
-
 @main.command("dev", help="uvicorn 서버 실행")
 @click.option("--host", default="127.0.0.1", help="서버 호스트 주소")
 @click.option("--port", default=8000, help="서버 포트 번호")

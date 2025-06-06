@@ -1,5 +1,5 @@
 import pytest
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from fastapi import FastAPI
 from fastapi_mctools.middlewares.trustedhost import TrustedHostMiddleware
 
@@ -14,18 +14,18 @@ async def read_root():
 
 @pytest.mark.asyncio
 async def test_trusted_host_middleware():
-    async with AsyncClient(app=app, base_url="http://example.com") as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://example.com") as ac:
         response = await ac.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "hello world"}
 
     # VPC IP 시작이 10.0인 경우를 테스트
-    async with AsyncClient(app=app, base_url="http://10.0.0.1") as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://10.0.0.1") as ac:
         response = await ac.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "hello world"}
 
     # 허용되지 않은 호스트를 테스트
-    async with AsyncClient(app=app, base_url="http://notallowed.com") as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://notallowed.com") as ac:
         response = await ac.get("/")
     assert response.status_code != 200
