@@ -12,13 +12,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.11
+          python-version: 3.12
       - name: Install dependencies
         run: |
-          pip install poetry
-          poetry config pypi-token.pypi ${{ secrets.PYPI_API }}
+          pip install uv
 
       - name: Build and publish
         run: |
-          poetry build
-          poetry publish
+          uv build
+          uv publish --token ${{ secrets.PYPI_API }}
