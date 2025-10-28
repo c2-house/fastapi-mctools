@@ -31,11 +31,11 @@ class AsyncDB:
         get_db = AsyncDB(db_url)
     """
 
-    def __init__(self, db_url: str, meta: MetaData = None, **kwargs) -> None:
+    def __init__(self, db_url: str, meta: MetaData = None, engine_config: dict = {}, session_config: dict = {}) -> None:
         self.db_url = db_url
         self.meta = meta
-        self.__engine = create_async_engine(db_url)
-        self.__async_session = async_sessionmaker(self.__engine, **kwargs)
+        self.__engine = create_async_engine(db_url, **engine_config)
+        self.__async_session = async_sessionmaker(self.__engine, **session_config)
 
     @property
     def engine(self) -> Engine:
