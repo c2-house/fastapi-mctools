@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-mctools"
-version = "0.5.2"
+version = "0.6.0"
 description = "Fastapi mc style tools to make it easier to develop."
 authors = [
     {name = "Jungminchae", email = "minchae3618@gmail.com"}
