@@ -1,14 +1,10 @@
 from pathlib import Path
-from decouple import AutoConfig
-from zoneinfo import ZoneInfo, tz
-from pydantic_settings import BaseSettings
-
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-config = AutoConfig(search_path=BASE_DIR)
+from zoneinfo import ZoneInfo
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class AppSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
     DEBUG: bool = config("DEBUG", cast=bool, default=True)
     OPENAPI_URL: str | None = "/openapi.json" if DEBUG else None
     API_PREFIX: str = "/api/v1"
